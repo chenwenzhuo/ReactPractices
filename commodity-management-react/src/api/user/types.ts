@@ -6,7 +6,8 @@ export interface LoginForm {
 }
 
 interface DataType {
-  token: string,
+  token?: string,
+  message?: string,
 }
 
 //定义全部接口返回数据都拥有ts类型

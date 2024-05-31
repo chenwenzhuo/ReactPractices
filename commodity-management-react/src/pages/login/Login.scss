@@ -1,0 +1,44 @@
+.login-component {
+  width: 100%;
+  height: 100vh;
+  background: url('@/assets/images/background.jpg') no-repeat;
+  background-size: cover;
+
+  .placeholder-col,
+  .form-col {
+    height: 100vh;
+  }
+
+  .form-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .form-area {
+      width: 500px;
+      height: 300px;
+      background: url("@/assets/images/login_form.png") no-repeat;
+      background-size: cover;
+      color: #ffffff;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+
+      .form-title {
+        font-size: 30px;
+        font-weight: bold;
+        margin-left: 20px;
+      }
+
+      .form-body {
+        width: 400px;
+        margin: 0 auto;
+
+        .login-btn {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

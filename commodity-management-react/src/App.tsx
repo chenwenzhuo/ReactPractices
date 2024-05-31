@@ -1,9 +1,10 @@
 import {FC} from "react";
+import {Outlet} from "react-router-dom";
 
 const App: FC = () => {
   return (
     <>
-      <h1>商品管理系统</h1>
+      <Outlet/>
     </>
   )
 }
