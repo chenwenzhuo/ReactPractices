@@ -10,7 +10,7 @@ function createUserList() {
       desc: '平台管理员',
       roles: ['平台管理员'],
       buttons: ['cuser.detail'],
-      routes: ['home'],
+      routes: ['layout'],
       token: 'Admin Token',
     },
     {
@@ -22,7 +22,7 @@ function createUserList() {
       desc: '系统管理员',
       roles: ['系统管理员'],
       buttons: ['cuser.detail', 'cuser.user'],
-      routes: ['home'],
+      routes: ['layout'],
       token: 'System Token',
     },
   ]

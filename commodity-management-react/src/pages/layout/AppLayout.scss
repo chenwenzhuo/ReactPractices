@@ -1,0 +1,44 @@
+.home-component {
+  width: 100%;
+  height: 100vh;
+
+  .home-sider {
+    line-height: 120px;
+    color: #ffffff;
+
+    .menu-container {
+      height: calc(100vh - 120px);
+      color: red;
+      overflow-y: auto;
+      border-top: 1px solid #ffffff;
+
+      &::-webkit-scrollbar {
+        width: 0;
+      }
+    }
+  }
+
+  .home-header {
+    height: 64px;
+    line-height: 64px;
+    text-align: center;
+    color: #ffffff;
+    padding-inline: 48px;
+    background-color: #4096ff;
+  }
+
+  .home-content {
+    min-height: 120px;
+    line-height: 120px;
+    text-align: center;
+    color: #ffffff;
+    background-color: #0958d9;
+    overflow: auto;
+  }
+
+  .home-footer {
+    text-align: center;
+    color: #ffffff;
+    background-color: #4096ff;
+  }
+}

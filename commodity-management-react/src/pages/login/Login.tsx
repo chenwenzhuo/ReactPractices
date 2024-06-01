@@ -37,7 +37,7 @@ const Login: FC = () => {
     setLoginLoading(true);
     try {
       await dispatch(doLogin(formValues));
-      navigate('/home');
+      navigate('/admin');
 
       const time: string = getTime();
       notification.success({

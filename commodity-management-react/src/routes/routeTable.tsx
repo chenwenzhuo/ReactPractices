@@ -1,7 +1,7 @@
 import {createBrowserRouter} from "react-router-dom";
 import App from "@/App.tsx";
 import Login from "@/pages/login/Login.tsx";
-import Home from "@/pages/home/Home.tsx";
+import AppLayout from "@/pages/layout/AppLayout.tsx";
 import NotFound from "@/pages/404/NotFound.tsx";
 import Index from "@/pages/index-route/Index.tsx";
 
@@ -16,8 +16,8 @@ const router = createBrowserRouter([
         element: <Login/>,
       },
       {
-        path: 'home',
-        element: <Home/>,
+        path: 'admin',
+        element: <AppLayout/>,
       },
     ]
   },
@@ -25,6 +25,6 @@ const router = createBrowserRouter([
     path: '*',
     element: <NotFound/>
   }
-]);
+] as any[]);
 
 export default router;
