@@ -10,6 +10,26 @@ const userSlice = createSlice({
   initialState: {
     // 用户的唯一标识。登录成功后将存储到localStorage中，故默认从这里读取
     token: localStorage.getItem('TOKEN'),
+    menuRoutes: [
+      {path: 'home', name: '首页'},
+      {
+        path: 'acl', name: '权限管理',
+        children: [
+          {path: 'user', name: '用户管理'},
+          {path: 'role', name: '角色管理'},
+          {path: 'permission', name: '菜单管理'},
+        ],
+      },
+      {
+        path: 'product', name: '商品管理',
+        children: [
+          {path: 'trademark', name: '品牌管理'},
+          {path: 'attr', name: '属性管理'},
+          {path: 'spu', name: 'SPU管理'},
+          {path: 'sku', name: 'SKU管理'},
+        ],
+      },
+    ],
   } as UserStateType,
   reducers: {
     setToken: (state, action: PayloadAction<string | null>) => {

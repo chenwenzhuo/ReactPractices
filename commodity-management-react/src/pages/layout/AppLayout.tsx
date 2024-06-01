@@ -4,6 +4,7 @@ import {Layout} from 'antd';
 import './AppLayout.scss';
 import Logo from "@/components/Logo/Logo.tsx";
 import {SiderMenu} from "@/components/SiderMenu/SiderMenu.tsx";
+import {Outlet} from "react-router-dom";
 
 const {Header, Footer, Sider, Content} = Layout;
 
@@ -20,7 +21,9 @@ const AppLayout: FC = () => {
       </Sider>
       <Layout>
         <Header className={"home-header"}>Header</Header>
-        <Content className={"home-content"}>Content</Content>
+        <Content className={"home-content"}>
+          <Outlet/>
+        </Content>
         <Footer className={"home-footer"}>Footer</Footer>
       </Layout>
     </Layout>

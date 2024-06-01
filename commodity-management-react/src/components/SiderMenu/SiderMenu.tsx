@@ -1,58 +1,60 @@
 import {FC} from "react";
 import {Menu} from 'antd';
-import type {MenuProps} from 'antd';
 import {
-  AppstoreOutlined,
-  ContainerOutlined,
-  DesktopOutlined,
-  MailOutlined,
-  PieChartOutlined,
+  GoldOutlined,
+  HomeOutlined,
+  KeyOutlined,
+  ShopOutlined,
+  ShoppingCartOutlined,
+  ShoppingOutlined,
+  TagsOutlined,
+  TeamOutlined,
+  ToolOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
+import {useAppSelector} from "@/redux/hooks.ts";
+import {nanoid} from "@reduxjs/toolkit";
+import {routesMapType} from "@/api/types.ts";
 
-type MenuItem = Required<MenuProps>['items'][number];
-
-const items: MenuItem[] = [
-  {key: '1', icon: <PieChartOutlined/>, label: 'Option 1'},
-  {key: '2', icon: <DesktopOutlined/>, label: 'Option 2'},
-  {key: '3', icon: <ContainerOutlined/>, label: 'Option 3'},
-  {
-    key: 'sub1',
-    label: 'Navigation One',
-    icon: <MailOutlined/>,
-    children: [
-      {key: '5', label: 'Option 5'},
-      {key: '6', label: 'Option 6'},
-      {key: '7', label: 'Option 7'},
-      {key: '8', label: 'Option 8'},
-    ],
-  },
-  {
-    key: 'sub2',
-    label: 'Navigation Two',
-    icon: <AppstoreOutlined/>,
-    children: [
-      {key: '9', label: 'Option 9'},
-      {key: '10', label: 'Option 10'},
-      {
-        key: 'sub3',
-        label: 'Submenu',
-        children: [
-          {key: '11', label: 'Option 11'},
-          {key: '12', label: 'Option 12'},
-        ],
-      },
-    ],
-  },
-];
+const iconMap = {
+  home: <HomeOutlined/>,
+  acl: <KeyOutlined/>,
+  user: <UserOutlined/>,
+  role: <TeamOutlined/>,
+  permission: <ToolOutlined/>,
+  product: <GoldOutlined/>,
+  trademark: <ShopOutlined/>,
+  attr: <TagsOutlined/>,
+  spu: <ShoppingCartOutlined/>,
+  sku: <ShoppingOutlined/>
+};
 
 export const SiderMenu: FC = () => {
+  const {menuRoutes} = useAppSelector(state => state.user);
+
+  // 根据用户具有权限的路由，动态生成菜单项
+  const menuRoutesToItems = (routesArr: any[]) => {
+    return routesArr.map(routeItem => {
+      const result = {
+        key: nanoid(),
+        icon: iconMap[routeItem.path as keyof routesMapType],
+        label: routeItem.name,
+      } as any;
+      if (routeItem.children) {
+        result.children = menuRoutesToItems(routeItem.children);
+      }
+      return result;
+    });
+  }
+  const menuItems = menuRoutesToItems(menuRoutes);
+
   return (
     <main className={"sider-menu-component"}>
       <Menu
-        defaultSelectedKeys={['1']}
+        defaultSelectedKeys={[menuItems[0].key]}
         mode="inline"
         theme="dark"
-        items={items}
+        items={menuItems}
       />
     </main>
   );
