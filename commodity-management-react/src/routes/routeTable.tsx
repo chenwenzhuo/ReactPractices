@@ -6,9 +6,9 @@ import AppLayout from "@/pages/layout/AppLayout.tsx";
 import NotFound from "@/pages/404/NotFound.tsx";
 import Home from "@/pages/home/Home.tsx";
 
-import {routesMapType} from "@/api/types.ts";
+import {RoutesMapType} from "@/api/types.ts";
 
-const routesMap: routesMapType = {
+const routesMap: RoutesMapType = {
   home: {path: 'home', element: <Home/>},
   acl: {path: 'acl', element: <Home/>},
   product: {path: 'product', element: <Home/>},
@@ -38,10 +38,10 @@ const router = createBrowserRouter([
         // typescript中使用变量作为索引来访问未知类型，例如泛型对象成员时，会报错TS7053
         // 所以为 routesMap 显式指定了类型，并将 route.path 断言为 routesMapType 的键
         children: userState.menuRoutes.map(route => {
-          const result = routesMap[route.path as keyof routesMapType];
+          const result = routesMap[route.path as keyof RoutesMapType];
           if (route.children) {
             result.children = route.children.map(
-              (child: any) => routesMap[child.path as keyof routesMapType]
+              (child: any) => routesMap[child.path as keyof RoutesMapType]
             );
           }
           return result;

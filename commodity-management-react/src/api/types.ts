@@ -1,4 +1,4 @@
-export interface routesMapType {
+export interface RoutesMapType {
   home: any,
   acl: any,
   product: any,

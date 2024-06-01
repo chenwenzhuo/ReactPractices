@@ -14,7 +14,7 @@ import {
 } from '@ant-design/icons';
 import {useAppSelector} from "@/redux/hooks.ts";
 import {nanoid} from "@reduxjs/toolkit";
-import {routesMapType} from "@/api/types.ts";
+import {RoutesMapType} from "@/api/types.ts";
 
 const iconMap = {
   home: <HomeOutlined/>,
@@ -37,7 +37,7 @@ export const SiderMenu: FC = () => {
     return routesArr.map(routeItem => {
       const result = {
         key: nanoid(),
-        icon: iconMap[routeItem.path as keyof routesMapType],
+        icon: iconMap[routeItem.path as keyof RoutesMapType],
         label: routeItem.name,
       } as any;
       if (routeItem.children) {
