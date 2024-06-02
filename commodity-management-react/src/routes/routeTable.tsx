@@ -1,5 +1,6 @@
 import {createBrowserRouter, Navigate} from "react-router-dom";
 import store from "@/redux/store.ts";
+
 import App from "@/App.tsx";
 import Login from "@/pages/login/Login.tsx";
 import AppLayout from "@/pages/layout/AppLayout.tsx";
@@ -12,25 +13,14 @@ import TrademarkManage from "@/pages/product/trademark/TrademarkManage.tsx";
 import AttrManage from "@/pages/product/attr/AttrManage.tsx";
 import SpuManage from "@/pages/product/spu/SpuManage.tsx";
 import SkuManage from "@/pages/product/sku/SkuManage.tsx";
-
+import RedirectTransit from "@/pages/RedirectTransit.tsx";
 import {RoutesMapType} from "@/api/types.ts";
 
 const userState = store.getState().user; // 获得 redux store 中的数据
-
-// 计算 /admin/acl 和 /admin/product 路由的重定向地址
-// 若用户有权限访问这两个路由，则重定向到其第一个子路由
-const getNavigateTarget = (path: 'acl' | 'product') => {
-  const {menuRoutes} = userState;
-  const routeObj = menuRoutes.find(item => item.path === path);
-  if (!routeObj)
-    return null;
-  return routeObj.children[0].path;
-}
-
 const routesMap: RoutesMapType = {
   home: {path: 'home', element: <Home/>},
-  acl: {path: 'acl', element: <Navigate to={`/admin/acl/${getNavigateTarget('acl')}`}/>},
-  product: {path: 'product', element: <Navigate to={`/admin/product/${getNavigateTarget('product')}`}/>},
+  acl: {path: 'acl', element: <RedirectTransit middlePath={"acl"}/>},
+  product: {path: 'product', element: <RedirectTransit middlePath={"product"}/>},
   user: {path: 'user', element: <UserManage/>},
   role: {path: 'role', element: <RoleManage/>},
   permission: {path: 'permission', element: <PermissionManage/>},
@@ -72,5 +62,6 @@ const router = createBrowserRouter([
     element: <NotFound/>
   }
 ]);
+console.log('router---', router);
 
 export default router;
