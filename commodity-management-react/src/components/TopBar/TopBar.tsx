@@ -14,13 +14,14 @@ import './TopBar.scss';
 import avatar from '@/assets/react.svg';
 import {RoutesMapType} from "@/api/types.ts";
 import {useAppDispatch, useAppSelector} from "@/redux/hooks.ts";
+import {selectAllUserState} from "@/redux/userSlice.ts";
 import {toggleSiderCollapsed} from "@/redux/settingSlice.ts";
 import {menuIconMap} from "@/components/SiderMenu/SiderMenu.tsx";
 
 const TopBar: FC = () => {
   const location = useLocation();
   const dispatch = useAppDispatch();
-  const {menuRoutes} = useAppSelector(state => state.user);
+  const {menuRoutes} = useAppSelector(selectAllUserState);
   const {siderCollapsed} = useAppSelector(state => state.setting);
 
   // 根据路径，得到各级菜单的路由名称

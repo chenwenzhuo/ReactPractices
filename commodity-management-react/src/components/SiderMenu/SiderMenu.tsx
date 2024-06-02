@@ -13,8 +13,10 @@ import {
   ToolOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import {useAppSelector} from "@/redux/hooks.ts";
 import {nanoid} from "@reduxjs/toolkit";
+
+import {useAppSelector} from "@/redux/hooks.ts";
+import {selectAllUserState} from "@/redux/userSlice.ts";
 import {RoutesMapType} from "@/api/types.ts";
 
 export const menuIconMap = {
@@ -35,7 +37,7 @@ const keyMap = new Map();// 记录下路由路径与随机key的映射
 const SiderMenu: FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {menuRoutes} = useAppSelector(state => state.user);
+  const {menuRoutes} = useAppSelector(selectAllUserState);
 
   const [menuItems, setMenuItems] = useState<any[]>([]);
   const [selectedMenuKeys, setSelectedMenuKeys] = useState<string[]>([]); // 选中的菜单项的key

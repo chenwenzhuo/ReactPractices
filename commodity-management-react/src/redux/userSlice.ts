@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {AppDispatch} from "@/redux/store.ts";
+import {AppDispatch, RootState} from "@/redux/store.ts";
 import {LoginForm, LoginResponse} from "@/api/user/types.ts";
 import {reqLogin} from "@/api/user";
 import {UserStateType} from "@/redux/types/types.ts";
@@ -56,6 +56,8 @@ export const doLogin = (loginForm: LoginForm) => {
     return Promise.reject(new Error(response.data.message));
   }
 }
+
+export const selectAllUserState = (state: RootState) => state.user;
 
 export const {setToken} = userSlice.actions;
 
