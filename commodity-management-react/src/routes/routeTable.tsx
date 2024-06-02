@@ -62,6 +62,5 @@ const router = createBrowserRouter([
     element: <NotFound/>
   }
 ]);
-console.log('router---', router);
 
 export default router;
