@@ -1,0 +1,40 @@
+@mixin top-bar-flex {
+  display: flex;
+  align-items: center;
+}
+
+.top-bar-component {
+  @include top-bar-flex;
+  justify-content: space-between;
+  height: 100%;
+
+  .top-bar-left,
+  .top-bar-right {
+    @include top-bar-flex;
+  }
+
+  .top-bar-left {
+    .toggle-btn {
+      margin-right: 20px;
+    }
+  }
+
+  .top-bar-right {
+    .opt-btn {
+      margin-right: 15px;
+    }
+
+    img {
+      width: 35px;
+      padding: 5px;
+      margin-right: 10px;
+      background-color: #bfa;
+      border-radius: 50%;
+    }
+
+    .dropdown-uname {
+      margin-right: 3px;
+      font-size: 16px;
+    }
+  }
+}

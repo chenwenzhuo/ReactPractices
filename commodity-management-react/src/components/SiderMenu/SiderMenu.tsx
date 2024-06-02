@@ -17,7 +17,7 @@ import {useAppSelector} from "@/redux/hooks.ts";
 import {nanoid} from "@reduxjs/toolkit";
 import {RoutesMapType} from "@/api/types.ts";
 
-const iconMap = {
+export const menuIconMap = {
   home: <HomeOutlined/>,
   acl: <KeyOutlined/>,
   user: <UserOutlined/>,
@@ -32,7 +32,7 @@ const iconMap = {
 
 const keyMap = new Map();// 记录下路由路径与随机key的映射
 
-export const SiderMenu: FC = () => {
+const SiderMenu: FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const {menuRoutes} = useAppSelector(state => state.user);
@@ -49,7 +49,7 @@ export const SiderMenu: FC = () => {
       const result = {
         key,
         path: routeItem.path,
-        icon: iconMap[routeItem.path as keyof RoutesMapType],
+        icon: menuIconMap[routeItem.path as keyof RoutesMapType],
         label: routeItem.name,
       } as any;
       if (routeItem.children) {
@@ -126,3 +126,5 @@ export const SiderMenu: FC = () => {
     </main>
   );
 };
+
+export default SiderMenu;
