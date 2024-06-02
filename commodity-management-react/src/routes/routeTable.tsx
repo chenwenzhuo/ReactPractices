@@ -5,22 +5,40 @@ import Login from "@/pages/login/Login.tsx";
 import AppLayout from "@/pages/layout/AppLayout.tsx";
 import NotFound from "@/pages/404/NotFound.tsx";
 import Home from "@/pages/home/Home.tsx";
+import UserManage from "@/pages/acl/user/UserManage.tsx";
+import RoleManage from "@/pages/acl/role/RoleManage.tsx";
+import PermissionManage from "@/pages/acl/permission/PermissionManage.tsx";
+import TrademarkManage from "@/pages/product/trademark/TrademarkManage.tsx";
+import AttrManage from "@/pages/product/attr/AttrManage.tsx";
+import SpuManage from "@/pages/product/spu/SpuManage.tsx";
+import SkuManage from "@/pages/product/sku/SkuManage.tsx";
 
 import {RoutesMapType} from "@/api/types.ts";
 
+const userState = store.getState().user; // 获得 redux store 中的数据
+
+// 计算 /admin/acl 和 /admin/product 路由的重定向地址
+// 若用户有权限访问这两个路由，则重定向到其第一个子路由
+const getNavigateTarget = (path: 'acl' | 'product') => {
+  const {menuRoutes} = userState;
+  const routeObj = menuRoutes.find(item => item.path === path);
+  if (!routeObj)
+    return null;
+  return routeObj.children[0].path;
+}
+
 const routesMap: RoutesMapType = {
   home: {path: 'home', element: <Home/>},
-  acl: {path: 'acl', element: <Home/>},
-  product: {path: 'product', element: <Home/>},
-  user: {path: 'user', element: <Home/>},
-  role: {path: 'role', element: <Home/>},
-  permission: {path: 'permission', element: <Home/>},
-  trademark: {path: 'trademark', element: <Home/>},
-  attr: {path: 'attr', element: <Home/>},
-  spu: {path: 'spu', element: <Home/>},
-  sku: {path: 'sku', element: <Home/>},
+  acl: {path: 'acl', element: <Navigate to={`/admin/acl/${getNavigateTarget('acl')}`}/>},
+  product: {path: 'product', element: <Navigate to={`/admin/product/${getNavigateTarget('product')}`}/>},
+  user: {path: 'user', element: <UserManage/>},
+  role: {path: 'role', element: <RoleManage/>},
+  permission: {path: 'permission', element: <PermissionManage/>},
+  trademark: {path: 'trademark', element: <TrademarkManage/>},
+  attr: {path: 'attr', element: <AttrManage/>},
+  spu: {path: 'spu', element: <SpuManage/>},
+  sku: {path: 'sku', element: <SkuManage/>},
 };
-const userState = store.getState().user; // 获得 redux store 中的数据
 
 const router = createBrowserRouter([
   {
