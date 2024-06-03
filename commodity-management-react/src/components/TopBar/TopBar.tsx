@@ -15,7 +15,7 @@ import avatar from '@/assets/react.svg';
 import {RoutesMapType} from "@/api/types.ts";
 import {useAppDispatch, useAppSelector} from "@/redux/hooks.ts";
 import {selectAllUserState} from "@/redux/userSlice.ts";
-import {selectAllSettingState, toggleSiderCollapsed} from "@/redux/settingSlice.ts";
+import {selectAllSettingState, toggleSiderCollapsed, toggleRefresh} from "@/redux/settingSlice.ts";
 import {menuIconMap} from "@/components/SiderMenu/SiderMenu.tsx";
 
 const TopBar: FC = () => {
@@ -55,6 +55,10 @@ const TopBar: FC = () => {
     dispatch(toggleSiderCollapsed());
   };
 
+  const onRefreshClick = () => {
+    dispatch(toggleRefresh());
+  }
+
   return (
     <main className={"top-bar-component"}>
       <section className="top-bar-left">
@@ -68,7 +72,8 @@ const TopBar: FC = () => {
         <Breadcrumb separator=">" items={breadcrumbItems}/>
       </section>
       <section className="top-bar-right">
-        <Button className={"opt-btn"} shape="circle" icon={<SyncOutlined/>}/>
+        <Button className={"opt-btn"} shape="circle" icon={<SyncOutlined/>}
+                onClick={onRefreshClick}/>
         <Button className={"opt-btn"} shape="circle" icon={<ExpandOutlined/>}/>
         <Button className={"opt-btn"} shape="circle" icon={<SettingOutlined/>}/>
         <img src={avatar} alt=""/>
