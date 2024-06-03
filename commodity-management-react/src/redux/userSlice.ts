@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {AppDispatch, RootState} from "@/redux/store.ts";
 import {LoginForm, LoginResponse} from "@/api/user/types.ts";
-import {reqLogin} from "@/api/user";
+import {reqLogin, reqUserInfo} from "@/api/user";
 import {UserStateType} from "@/redux/types/types.ts";
 
 // 用户数据仓库
@@ -10,6 +10,8 @@ const userSlice = createSlice({
   initialState: {
     // 用户的唯一标识。登录成功后将存储到localStorage中，故默认从这里读取
     token: localStorage.getItem('TOKEN'),
+    username: '',
+    avatar: '',
     menuRoutes: [
       {path: 'home', name: '首页'},
       {
@@ -34,9 +36,17 @@ const userSlice = createSlice({
   reducers: {
     setToken: (state, action: PayloadAction<string | null>) => {
       state.token = action.payload;
+    },
+    setUsername: (state, action: PayloadAction<string>) => {
+      state.username = action.payload;
+    },
+    setAvatar: (state, action: PayloadAction<string>) => {
+      state.avatar = action.payload;
     }
   },
 });
+
+const {setToken, setUsername, setAvatar} = userSlice.actions;
 
 // 异步action creator，返回一个thunk函数
 export const doLogin = (loginForm: LoginForm) => {
@@ -57,8 +67,18 @@ export const doLogin = (loginForm: LoginForm) => {
   }
 }
 
+// 获取用户信息
+export const fetchUserInfo = () => {
+  return async (dispatch: AppDispatch) => {
+    const response = await reqUserInfo();
+    console.log('user info res---', response);
+    const {data: {checkUser}} = response;
+    if (response.code === 200) {
+      dispatch(setUsername(checkUser.username));
+      dispatch(setAvatar(checkUser.avatar));
+    }
+  }
+}
+
 export const selectAllUserState = (state: RootState) => state.user;
-
-export const {setToken} = userSlice.actions;
-
 export default userSlice.reducer;

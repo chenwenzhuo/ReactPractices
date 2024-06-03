@@ -12,7 +12,6 @@ import {
 } from '@ant-design/icons';
 
 import './TopBar.scss';
-import avatar from '@/assets/react.svg';
 import {RoutesMapType} from "@/api/types.ts";
 import {useAppDispatch, useAppSelector} from "@/redux/hooks.ts";
 import {selectAllUserState} from "@/redux/userSlice.ts";
@@ -22,7 +21,7 @@ import {menuIconMap} from "@/components/SiderMenu/SiderMenu.tsx";
 const TopBar: FC = () => {
   const location = useLocation();
   const dispatch = useAppDispatch();
-  const {menuRoutes} = useAppSelector(selectAllUserState);
+  const {username, avatar, menuRoutes} = useAppSelector(selectAllUserState);
   const {siderCollapsed} = useAppSelector(selectAllSettingState);
   const [fullscreen, setFullscreen] = useState<boolean>(false);
 
@@ -99,7 +98,9 @@ const TopBar: FC = () => {
           arrow={{pointAtCenter: true}}
         >
           <span>
-            <span className={"dropdown-uname"}>admin</span>
+            <span className={"dropdown-uname"}>
+              {username}
+            </span>
             <DownOutlined/>
           </span>
         </Dropdown>
