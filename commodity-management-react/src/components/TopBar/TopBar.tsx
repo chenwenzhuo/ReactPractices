@@ -1,7 +1,8 @@
-import {FC} from "react";
+import {FC, useState} from "react";
 import {useLocation} from "react-router-dom";
 import {Breadcrumb, Button, Dropdown} from "antd";
 import {
+  CompressOutlined,
   DownOutlined,
   ExpandOutlined,
   MenuFoldOutlined,
@@ -23,6 +24,7 @@ const TopBar: FC = () => {
   const dispatch = useAppDispatch();
   const {menuRoutes} = useAppSelector(selectAllUserState);
   const {siderCollapsed} = useAppSelector(selectAllSettingState);
+  const [fullscreen, setFullscreen] = useState<boolean>(false);
 
   // 根据路径，得到各级菜单的路由名称
   const menuPaths = location.pathname.split('admin')[1]
@@ -59,6 +61,18 @@ const TopBar: FC = () => {
     dispatch(toggleRefresh());
   }
 
+  const onFullScreenClick = () => {
+    // DOM对象的一个属性，获取当前全屏显示的DOM元素，可用于判断当前是否全屏模式
+    const fullElem = document.fullscreenElement;
+    if (!fullElem) {
+      // 文档根节点的 requestFullscreen 方法，开启全屏模式
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen(); // 退出全屏
+    }
+    setFullscreen(!fullElem);
+  };
+
   return (
     <main className={"top-bar-component"}>
       <section className="top-bar-left">
@@ -74,7 +88,9 @@ const TopBar: FC = () => {
       <section className="top-bar-right">
         <Button className={"opt-btn"} shape="circle" icon={<SyncOutlined/>}
                 onClick={onRefreshClick}/>
-        <Button className={"opt-btn"} shape="circle" icon={<ExpandOutlined/>}/>
+        <Button className={"opt-btn"} shape="circle"
+                icon={fullscreen ? <CompressOutlined/> : <ExpandOutlined/>}
+                onClick={onFullScreenClick}/>
         <Button className={"opt-btn"} shape="circle" icon={<SettingOutlined/>}/>
         <img src={avatar} alt=""/>
         <Dropdown
