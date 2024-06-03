@@ -10,7 +10,7 @@ import SiderMenu from "@/components/SiderMenu/SiderMenu.tsx";
 import TopBar from "@/components/TopBar/TopBar.tsx";
 import {flushSync} from "react-dom";
 
-const {Header, Footer, Sider, Content} = Layout;
+const {Header, Sider, Content} = Layout;
 
 const AppLayout: FC = () => {
   const navigate = useNavigate();
@@ -59,7 +59,6 @@ const AppLayout: FC = () => {
         <Content className={"home-content"}>
           {mainContentFlag && <Outlet/>}
         </Content>
-        <Footer className={"home-footer"}>Footer</Footer>
       </Layout>
     </Layout>
   );
