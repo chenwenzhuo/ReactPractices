@@ -15,6 +15,7 @@ import SpuManage from "@/pages/product/spu/SpuManage.tsx";
 import SkuManage from "@/pages/product/sku/SkuManage.tsx";
 import RedirectTransit from "@/pages/RedirectTransit.tsx";
 import {RoutesMapType} from "@/api/types.ts";
+import AuthGuard from "@/pages/auth-gard/AuthGuard.tsx";
 
 const userState = store.getState().user; // 获得 redux store 中的数据
 const routesMap: RoutesMapType = {
@@ -38,11 +39,19 @@ const router = createBrowserRouter([
       {index: true, element: <Navigate to={"/login"}/>}, // 索引路由
       {
         path: 'login',
-        element: <Login/>,
+        element: (
+          <AuthGuard>
+            <Login/>
+          </AuthGuard>
+        ),
       },
       {
         path: 'admin',
-        element: <AppLayout/>,
+        element: (
+          <AuthGuard>
+            <AppLayout/>
+          </AuthGuard>
+        ),
         // typescript中使用变量作为索引来访问未知类型，例如泛型对象成员时，会报错TS7053
         // 所以为 routesMap 显式指定了类型，并将 route.path 断言为 routesMapType 的键
         children: userState.menuRoutes.map(route => {

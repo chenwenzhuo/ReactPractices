@@ -82,7 +82,9 @@ export const fetchUserInfo = () => {
     if (response.code === 200) {
       dispatch(setUsername(checkUser.username));
       dispatch(setAvatar(checkUser.avatar));
+      return 'ok';
     }
+    return Promise.reject('获取用户信息失败');
   }
 }
 

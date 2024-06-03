@@ -9,7 +9,6 @@ import Logo from "@/components/Logo/Logo.tsx";
 import SiderMenu from "@/components/SiderMenu/SiderMenu.tsx";
 import TopBar from "@/components/TopBar/TopBar.tsx";
 import {flushSync} from "react-dom";
-import {fetchUserInfo} from "@/redux/userSlice.ts";
 
 const {Header, Footer, Sider, Content} = Layout;
 
@@ -25,9 +24,6 @@ const AppLayout: FC = () => {
     if (location.pathname === '/admin') {
       navigate('/admin/home');
     }
-
-    // 组件挂载后，获取用户信息
-    dispatch(fetchUserInfo());
   }, []);
 
   // 监听Redux中refresh标记的值变化

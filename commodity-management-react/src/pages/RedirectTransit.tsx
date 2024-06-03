@@ -17,9 +17,9 @@ const Index: FC<Props> = (props) => {
 
   // 计算 /admin/acl 和 /admin/product 路由的重定向地址
   const getNavigateTarget = () => {
-    // 通过state参数指定了目标路径，优先重定向到此路径
+    // 通过state参数指定了目标路径，且不是以上两个路径，优先重定向到此路径
     const {targetPath} = location.state || {};
-    if (targetPath) {
+    if (targetPath && !['/admin/acl', '/admin/product'].includes(targetPath)) {
       const pathArr = targetPath.split('/');
       return pathArr[pathArr.length - 1];
     }
