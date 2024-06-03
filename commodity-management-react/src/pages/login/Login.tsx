@@ -41,10 +41,11 @@ const Login: FC = () => {
       const {targetPath} = location.state || {};
       if (targetPath) {
         navigate(targetPath, {
-          state: {targetPath}
+          replace: true,
+          state: {targetPath},
         });
       } else {
-        navigate('/admin');
+        navigate('/admin', {replace: true});
       }
 
       const time: string = getTime();
