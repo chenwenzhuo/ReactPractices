@@ -1,5 +1,5 @@
 import {FC, useState} from "react";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {Breadcrumb, Button, Dropdown} from "antd";
 import {
   CompressOutlined,
@@ -14,12 +14,13 @@ import {
 import './TopBar.scss';
 import {RoutesMapType} from "@/api/types.ts";
 import {useAppDispatch, useAppSelector} from "@/redux/hooks.ts";
-import {selectAllUserState} from "@/redux/userSlice.ts";
+import {clearDataOnLogout, selectAllUserState} from "@/redux/userSlice.ts";
 import {selectAllSettingState, toggleSiderCollapsed, toggleRefresh} from "@/redux/settingSlice.ts";
 import {menuIconMap} from "@/components/SiderMenu/SiderMenu.tsx";
 
 const TopBar: FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const {username, avatar, menuRoutes} = useAppSelector(selectAllUserState);
   const {siderCollapsed} = useAppSelector(selectAllSettingState);
@@ -44,14 +45,6 @@ const TopBar: FC = () => {
     return result;
   });
 
-  // 用户名下拉菜单配置项
-  const dropDownItems = [{
-    key: 'logOut',
-    label: (
-      <Button type={"text"}>退出登录</Button>
-    )
-  }];
-
   const toggleCollapsed = () => {
     dispatch(toggleSiderCollapsed());
   };
@@ -71,6 +64,21 @@ const TopBar: FC = () => {
     }
     setFullscreen(!fullElem);
   };
+
+  const onLogoutClick = () => {
+    dispatch(clearDataOnLogout()); // 清除Redux中存储的数据
+    navigate('/login', {
+      state: {targetPath: location.pathname}
+    });
+  }
+
+  // 用户名下拉菜单配置项
+  const dropDownItems = [{
+    key: 'logOut',
+    label: (
+      <Button type={"text"} onClick={onLogoutClick}>退出登录</Button>
+    )
+  }];
 
   return (
     <main className={"top-bar-component"}>

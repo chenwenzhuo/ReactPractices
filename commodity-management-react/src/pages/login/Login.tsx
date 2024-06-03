@@ -1,5 +1,5 @@
 import {FC, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {Col, Row, Button, Form, Input, notification} from 'antd';
 import {UserOutlined, LockOutlined} from '@ant-design/icons';
 
@@ -17,6 +17,7 @@ const initialFormValues = {
 
 const Login: FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useAppDispatch();
 
   // 登录按钮的加载状态
@@ -37,7 +38,14 @@ const Login: FC = () => {
     setLoginLoading(true);
     try {
       await dispatch(doLogin(formValues));
-      navigate('/admin');
+      const {targetPath} = location.state || {};
+      if (targetPath) {
+        navigate(targetPath, {
+          state: {targetPath}
+        });
+      } else {
+        navigate('/admin');
+      }
 
       const time: string = getTime();
       notification.success({

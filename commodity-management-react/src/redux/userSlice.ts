@@ -42,6 +42,13 @@ const userSlice = createSlice({
     },
     setAvatar: (state, action: PayloadAction<string>) => {
       state.avatar = action.payload;
+    },
+    clearDataOnLogout: (state) => {
+      localStorage.setItem('TOKEN', '');
+      state.token = '';
+      state.username = '';
+      state.avatar = '';
+      // state.menuRoutes = [];
     }
   },
 });
@@ -71,7 +78,6 @@ export const doLogin = (loginForm: LoginForm) => {
 export const fetchUserInfo = () => {
   return async (dispatch: AppDispatch) => {
     const response = await reqUserInfo();
-    console.log('user info res---', response);
     const {data: {checkUser}} = response;
     if (response.code === 200) {
       dispatch(setUsername(checkUser.username));
@@ -81,4 +87,5 @@ export const fetchUserInfo = () => {
 }
 
 export const selectAllUserState = (state: RootState) => state.user;
+export const {clearDataOnLogout} = userSlice.actions;
 export default userSlice.reducer;
