@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {AppDispatch, RootState} from "@/redux/store.ts";
-import {LoginForm, LoginResponse} from "@/api/user/types.ts";
-import {reqLogin, reqUserInfo} from "@/api/user";
+import {LoginForm, LoginResponse, UserInfoResponse} from "@/api/user/types.ts";
+import {reqLogin, reqLogout, reqUserInfo} from "@/api/user";
 import {UserStateType} from "@/redux/types/types.ts";
 
 // 用户数据仓库
@@ -53,41 +53,50 @@ const userSlice = createSlice({
   },
 });
 
-const {setToken, setUsername, setAvatar} = userSlice.actions;
+const {setToken, setUsername, setAvatar, clearDataOnLogout} = userSlice.actions;
 
 // 异步action creator，返回一个thunk函数
 export const doLogin = (loginForm: LoginForm) => {
   // 发送登录请求
   return async (dispatch: AppDispatch) => {
     const response: LoginResponse = await reqLogin(loginForm);
-
     // 登录成功，存储用户token
     if (response.code === 200) {
-      dispatch(setToken(response.data.token as string)); // 存储token到state
-      localStorage.setItem('TOKEN', response.data.token as string); // 存储token到localStorage
-      return response.data.token;
+      dispatch(setToken(response.data as string)); // 存储token到state
+      localStorage.setItem('TOKEN', response.data as string); // 存储token到localStorage
+      return response.data;
     }
     // 登录失败
     dispatch(setToken(null));
     localStorage.setItem('TOKEN', '');
-    return Promise.reject(new Error(response.data.message));
+    return Promise.reject(new Error(response.data));
+  }
+}
+
+// 退出登录
+export const doLogout = () => {
+  return async (dispatch: AppDispatch) => {
+    const response: UserInfoResponse = await reqLogout();
+    if (response.code === 200) {
+      dispatch(clearDataOnLogout());
+      return response.message;
+    }
+    return Promise.reject(new Error(response.message));
   }
 }
 
 // 获取用户信息
 export const fetchUserInfo = () => {
   return async (dispatch: AppDispatch) => {
-    const response = await reqUserInfo();
-    const {data: {checkUser}} = response;
+    const response: any = await reqUserInfo();
     if (response.code === 200) {
-      dispatch(setUsername(checkUser.username));
-      dispatch(setAvatar(checkUser.avatar));
-      return 'ok';
+      dispatch(setUsername(response.data.name));
+      dispatch(setAvatar(response.data.avatar));
+      return response.data;
     }
-    return Promise.reject('获取用户信息失败');
+    return Promise.reject(new Error(response.message));
   }
 }
 
 export const selectAllUserState = (state: RootState) => state.user;
-export const {clearDataOnLogout} = userSlice.actions;
 export default userSlice.reducer;

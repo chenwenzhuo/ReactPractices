@@ -3,8 +3,8 @@ import {LoginForm, LoginResponse, UserInfoResponse} from "@/api/user/types.ts";
 
 //项目用户相关的请求地址
 enum API {
-  LOGIN = '/user/login',
-  USER_INFO = '/user/info',
+  LOGIN = '/admin/acl/index/login',
+  USER_INFO = '/admin/acl/index/info',
   LOGOUT = "/admin/acl/index/logout"
 }
 

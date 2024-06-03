@@ -1,18 +1,12 @@
 import {ConfigEnv, defineConfig, loadEnv} from 'vite'
 import react from '@vitejs/plugin-react'
-import {viteMockServe} from "vite-plugin-mock";
 
 // https://vitejs.dev/config/
 export default defineConfig(({command, mode}: ConfigEnv) => {
   // 获取各个环境下的环境变量
   const env = loadEnv(mode, process.cwd());
   return {
-    plugins: [
-      react(),
-      viteMockServe({
-        localEnabled: command === 'serve',
-      }),
-    ],
+    plugins: [react()],
     resolve: {
       alias: {
         '@': '/src',

@@ -2,7 +2,7 @@ import {FC, useEffect} from "react";
 import {Navigate, useLocation, useNavigate} from "react-router-dom";
 import {notification} from "antd";
 import {useAppDispatch, useAppSelector} from "@/redux/hooks.ts";
-import {clearDataOnLogout, fetchUserInfo, selectAllUserState} from "@/redux/userSlice.ts";
+import {doLogout, fetchUserInfo, selectAllUserState} from "@/redux/userSlice.ts";
 import IntrinsicAttributes = React.JSX.IntrinsicAttributes;
 
 interface AuthGuardProps {
@@ -31,8 +31,8 @@ const AuthGuard: FC<AuthGuardProps> = (props) => {
     if (!token) {
       return;
     }
-    dispatch(fetchUserInfo()).catch(() => {
-      dispatch(clearDataOnLogout());
+    dispatch(fetchUserInfo()).catch(async () => {
+      await dispatch(doLogout());
       navigate('/login', {
         state: {targetPath},
       });

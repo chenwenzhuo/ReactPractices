@@ -14,7 +14,7 @@ import {
 import './TopBar.scss';
 import {RoutesMapType} from "@/api/types.ts";
 import {useAppDispatch, useAppSelector} from "@/redux/hooks.ts";
-import {clearDataOnLogout, selectAllUserState} from "@/redux/userSlice.ts";
+import {doLogout, selectAllUserState} from "@/redux/userSlice.ts";
 import {selectAllSettingState, toggleSiderCollapsed, toggleRefresh} from "@/redux/settingSlice.ts";
 import {menuIconMap} from "@/components/SiderMenu/SiderMenu.tsx";
 
@@ -65,8 +65,8 @@ const TopBar: FC = () => {
     setFullscreen(!fullElem);
   };
 
-  const onLogoutClick = () => {
-    dispatch(clearDataOnLogout()); // 清除Redux中存储的数据
+  const onLogoutClick = async () => {
+    await dispatch(doLogout()); // 退出登录
     navigate('/login', {
       state: {targetPath: location.pathname}
     });
