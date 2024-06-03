@@ -4,6 +4,7 @@ import {Layout} from 'antd';
 
 import './AppLayout.scss';
 import {useAppSelector} from "@/redux/hooks.ts";
+import {selectAllSettingState} from "@/redux/settingSlice.ts";
 import Logo from "@/components/Logo/Logo.tsx";
 import SiderMenu from "@/components/SiderMenu/SiderMenu.tsx";
 import TopBar from "@/components/TopBar/TopBar.tsx";
@@ -13,7 +14,7 @@ const {Header, Footer, Sider, Content} = Layout;
 const AppLayout: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const {siderCollapsed} = useAppSelector(state => state.setting);
+  const {siderCollapsed} = useAppSelector(selectAllSettingState);
 
   useEffect(() => {
     // 当用户在地址栏直接输入 /admin 路径时，重定向到首页
