@@ -1,0 +1,17 @@
+.trademark-component {
+  background-color: #ffffff;
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+
+  .table-row-abc {
+    height: 100px;
+  }
+
+  .index-col,
+  .name-col,
+  .opt-col,
+  .logo-col {
+    vertical-align: middle;
+  }
+}
