@@ -251,7 +251,7 @@ const TrademarkManage: FC = () => {
           rowKey={"id"}
           bordered
           pagination={false}
-          rowClassName={() => "table-row-abc"}
+          rowClassName={() => "table-row"}
         />
         <div className={"pagination-wrapper"}>
           <Pagination
