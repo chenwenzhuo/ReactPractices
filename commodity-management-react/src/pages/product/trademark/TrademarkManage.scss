@@ -14,4 +14,28 @@
   .logo-col {
     vertical-align: middle;
   }
+
+  .logo-img {
+    height: 80px;
+  }
+
+  .opt-btn {
+    width: 50px;
+    color: #fff;
+    border: 0;
+  }
+
+  .modify-btn {
+    background-color: #ffb500;
+    margin-right: 10px;
+  }
+
+  .del-btn {
+    background-color: #ff4400;
+  }
+
+  .pagination-wrapper {
+    float: right;
+    margin-top: 15px;
+  }
 }
