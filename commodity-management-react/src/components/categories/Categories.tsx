@@ -1,7 +1,7 @@
 import {FC, useEffect, useState} from "react";
 import {Card, Form, Select} from "antd";
 
-import {reqCategory1, reqCategory2, reqCategory3} from "src/api/product/category";
+import {reqCategory1, reqCategory2, reqCategory3} from "@/api/product/category";
 import {CategoriesList, CategoryResponseData} from "@/api/product/category/types.ts";
 
 const FormItem = Form.Item;
