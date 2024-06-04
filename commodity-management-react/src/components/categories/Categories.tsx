@@ -22,7 +22,6 @@ const Categories: FC<CategoriesProps> = (props) => {
 
   async function getCategory1() {
     const response: CategoryResponseData = await reqCategory1();
-    console.log('getCategory1 response---', response);
     if (response.code === 200) {
       setOptionsCate1(response.data);
     }
@@ -30,7 +29,6 @@ const Categories: FC<CategoriesProps> = (props) => {
 
   async function getCategory2() {
     const response: CategoryResponseData = await reqCategory2(selectionCate1 as number);
-    console.log('getCategory2 response---', response);
     if (response.code === 200) {
       setOptionsCate2(response.data);
     }
@@ -38,24 +36,20 @@ const Categories: FC<CategoriesProps> = (props) => {
 
   async function getCategory3() {
     const response: CategoryResponseData = await reqCategory3(selectionCate2 as number);
-    console.log('getCategory3 response---', response);
     if (response.code === 200) {
       setOptionsCate3(response.data);
     }
   }
 
   function onChangeCate1(value: number) {
-    console.log('cate1 value---', value);
     setSelectionCate1(value);
   }
 
   function onChangeCate2(value: number) {
-    console.log('cate2 value---', value);
     setSelectionCate2(value);
   }
 
   function onChangeCate3(value: number) {
-    console.log('cate3 value---', value);
     setSelectionCate3(value);
   }
 
