@@ -6,14 +6,14 @@ export interface LoginForm {
 }
 
 // 全部接口返回数据都拥有的TS类型
-export interface Response {
+interface UserResponse {
   code: number,
   message: string,
   ok: boolean
 }
 
 // 登录接口返回数据类型
-export interface LoginResponse extends Response {
+export interface LoginResponse extends UserResponse {
   data: string,
 }
 
@@ -26,6 +26,6 @@ export interface UserInfo { // 用户信息对象的类型
   roles: string[];
 }
 
-export interface UserInfoResponse extends Response {
+export interface UserInfoResponse extends UserResponse {
   data: UserInfo,
 }
