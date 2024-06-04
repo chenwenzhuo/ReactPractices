@@ -33,3 +33,10 @@ export interface QueryTrademarkResponse extends TrademarkResponse {
     pages: number;
   }
 }
+
+// 新增、修改品牌的表单数据类型
+export interface TrademarkFormData {
+  id?: number;
+  tmName: string;
+  logoUrl: string;
+}
