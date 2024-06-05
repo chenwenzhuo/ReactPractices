@@ -24,6 +24,16 @@ const Index: FC<Props> = (props) => {
       return pathArr[pathArr.length - 1];
     }
 
+    // 指定了 /admin/acl 和 /admin/product 的子路由，则直接访问子路由
+    let arr = location.pathname.split('/admin/acl');
+    if (location.pathname.startsWith('/admin/acl') && arr[arr.length - 1] !== '') {
+      return arr[arr.length - 1].substring(1); // 从下标 1 开始取子串，去掉多余的斜杠 /
+    }
+    arr = location.pathname.split('/admin/product');
+    if (location.pathname.startsWith('/admin/product') && arr[arr.length - 1] !== '') {
+      return arr[arr.length - 1].substring(1); // 从下标 1 开始取子串，去掉多余的斜杠 /
+    }
+
     // 否则重定向到其第一个子路由
     const routeObj = menuRoutes.find(item => item.path === middlePath);
     if (!routeObj)
