@@ -7,11 +7,12 @@ import {CategoriesList, CategoryResponseData} from "@/api/product/category/types
 const FormItem = Form.Item;
 
 interface CategoriesProps {
+  disabled: boolean;
   setCategories: Function;
 }
 
 const Categories: FC<CategoriesProps> = (props) => {
-  const {setCategories} = props;
+  const {setCategories, disabled} = props;
   const [cateForm] = Form.useForm();
   const [optionsCate1, setOptionsCate1] = useState<CategoriesList>([]); // 一级分类选项
   const [optionsCate2, setOptionsCate2] = useState<CategoriesList>([]); // 二级分类选项
@@ -95,19 +96,23 @@ const Categories: FC<CategoriesProps> = (props) => {
           name={"category"}
           layout={"inline"}
           autoComplete={"off"}
+          disabled={disabled}
         >
           <FormItem label={"一级分类"} name={"cate1"}>
             <Select options={optionsCate1.map(item => ({label: item.name, value: item.id}))}
+                    placeholder={"请选择"}
                     style={{width: 300}}
                     onChange={onChangeCate1}/>
           </FormItem>
           <FormItem label={"二级分类"} name={"cate2"}>
             <Select options={optionsCate2.map(item => ({label: item.name, value: item.id}))}
+                    placeholder={"请选择"}
                     style={{width: 300}}
                     onChange={onChangeCate2}/>
           </FormItem>
           <FormItem label={"三级分类"} name={"cate3"}>
             <Select options={optionsCate3.map(item => ({label: item.name, value: item.id}))}
+                    placeholder={"请选择"}
                     style={{width: 300}}
                     onChange={onChangeCate3}/>
           </FormItem>

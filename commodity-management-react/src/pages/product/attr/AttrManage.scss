@@ -1,2 +1,32 @@
 .attr-component {
+  .opt-btn {
+    width: 50px;
+    color: #fff;
+    border: 0;
+  }
+
+  .update-btn {
+    background-color: #ffb500;
+    margin-right: 10px;
+  }
+
+  .del-btn {
+    background-color: #ff4400;
+  }
+
+  .add-attr-input {
+    width: 360px;
+  }
+
+  .add-attr-val-btn {
+    margin-top: 20px;
+  }
+
+  .add-attr-table {
+    margin: 20px 0;
+  }
+
+  .cancel-attr-adding-btn {
+    margin-left: 15px;
+  }
 }
