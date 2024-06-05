@@ -5,8 +5,6 @@ import {DeleteOutlined, FormOutlined, LoadingOutlined, PlusOutlined} from "@ant-
 import './TrademarkManage.scss';
 import {reqCreateOrUpdateTrademark, reqDeleteTrademark, reqTrademarkData} from "@/api/product/trademark";
 import {QueryTrademarkResponse, Trademark, TrademarkFormData, TrademarkRecords} from "@/api/product/trademark/types.ts";
-import {types} from "sass";
-import Error = types.Error;
 
 const FormItem = Form.Item;
 
