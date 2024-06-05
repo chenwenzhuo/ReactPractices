@@ -17,21 +17,12 @@ const Index: FC<Props> = (props) => {
 
   // 计算 /admin/acl 和 /admin/product 路由的重定向地址
   const getNavigateTarget = () => {
-    // 通过state参数指定了目标路径，且不是以上两个路径，优先重定向到此路径
-    const {targetPath} = location.state || {};
+    // 通过state参数或地址栏输入指定了目标路径，且不是以上两个路径，优先重定向到此路径
+    let {targetPath} = location.state || {};
+    targetPath = targetPath || location.pathname;
     if (targetPath && !['/admin/acl', '/admin/product'].includes(targetPath)) {
       const pathArr = targetPath.split('/');
       return pathArr[pathArr.length - 1];
-    }
-
-    // 指定了 /admin/acl 和 /admin/product 的子路由，则直接访问子路由
-    let arr = location.pathname.split('/admin/acl');
-    if (location.pathname.startsWith('/admin/acl') && arr[arr.length - 1] !== '') {
-      return arr[arr.length - 1].substring(1); // 从下标 1 开始取子串，去掉多余的斜杠 /
-    }
-    arr = location.pathname.split('/admin/product');
-    if (location.pathname.startsWith('/admin/product') && arr[arr.length - 1] !== '') {
-      return arr[arr.length - 1].substring(1); // 从下标 1 开始取子串，去掉多余的斜杠 /
     }
 
     // 否则重定向到其第一个子路由
