@@ -179,7 +179,6 @@ const AttrManage: FC = () => {
 
   // 修改属性值valueName   index-要修改的属性值的下标
   function setAttrValueName(e: any, index: number) {
-    console.log('setAttrValueName---', e.target.value, index);
     setNewAttrVals([
       ...newAttrVals.slice(0, index),
       {...newAttrVals[index], valueName: e.target.value.trim()},
