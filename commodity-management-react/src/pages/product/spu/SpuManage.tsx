@@ -17,16 +17,17 @@ enum Scene {
 }
 
 const SpuManage: FC = () => {
-  const [selectionCate1, setSelectionCate1] = useState<number | null>(null); // 一级分类选中项
-  const [selectionCate2, setSelectionCate2] = useState<number | null>(null); // 二级分类选中项
-  const [selectionCate3, setSelectionCate3] = useState<number | null>(null); // 三级分类选中项
-  const [scene, setScene] = useState<string>(Scene.ADD_SPU); // 场景标记
+  const [selectionCate1, setSelectionCate1] = useState<number | null>(2); // 一级分类选中项
+  const [selectionCate2, setSelectionCate2] = useState<number | null>(13); // 二级分类选中项
+  const [selectionCate3, setSelectionCate3] = useState<number | null>(61); // 三级分类选中项
+  const [scene, setScene] = useState<string>(Scene.DISPLAY_SPU); // 场景标记
   // 表格分页相关数据
   const [total, setTotal] = useState<number>(1);
   const [pageNo, setPageNo] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(5);
-
   const [spuInfoList, setSpuInfoList] = useState<SpuRecord[]>([]); // SPU展示表格的数据
+
+  const [selectedSpu, setSelectedSpu] = useState<SpuRecord | null>(null); // 更新SPU时，被选中的SPU对象
 
   const categoriesValidFlag = selectionCate1 !== null && selectionCate2 !== null && selectionCate3 !== null;
   const addSpuBtn = (
@@ -60,10 +61,10 @@ const SpuManage: FC = () => {
       title: '操作',
       width: 300,
       align: 'center',
-      render: (_: any, __: SpuRecord, ___: any) => {
+      render: (_: any, record: SpuRecord, ___: any) => {
         return (<div className={"opt-buttons"}>
           <Button type={"primary"} icon={<PlusOutlined/>} onClick={() => changeScene(3)}></Button>
-          <Button type={"primary"} icon={<FormOutlined/>}></Button>
+          <Button type={"primary"} icon={<FormOutlined/>} onClick={() => onUpdateSpuClick(record)}></Button>
           <Button type={"primary"} icon={<InfoCircleOutlined/>}></Button>
           <Button type={"primary"} icon={<DeleteOutlined/>}></Button>
         </div>);
@@ -104,7 +105,16 @@ const SpuManage: FC = () => {
     if (nextSceneIndex < 0 || nextSceneIndex >= sceneArr.length) {
       return;
     }
+    if (nextSceneIndex === 0) {
+      setSelectedSpu(null); // 从其他场景切换回展示列表，将选中的SPU重置为null
+    }
     setScene(sceneArr[nextSceneIndex]);
+  }
+
+  // 更新SPU时按钮点击事件
+  function onUpdateSpuClick(record: SpuRecord) {
+    setSelectedSpu(record);// 记录被选中的SPU对象
+    changeScene(2);
   }
 
   // 监视三个分类id、分页大小和页码，分类为有效值时查询SPU信息
@@ -153,7 +163,7 @@ const SpuManage: FC = () => {
         {
           (scene === Scene.ADD_SPU || scene === Scene.UPDATE_SPU) &&
           <div className={"add-update-spu-wrapper"}>
-            <SpuForm/>
+            <SpuForm spuInfo={selectedSpu} changeScene={changeScene}/>
           </div>
         }
         {/*新增SKU*/}

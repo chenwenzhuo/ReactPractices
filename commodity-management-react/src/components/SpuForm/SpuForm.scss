@@ -1,0 +1,21 @@
+.spu-form-component {
+  .upload-img-btn {
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .spu-name-input,
+  .spu-trademark-select,
+  .spu-sale-attr-select {
+    width: 400px;
+  }
+
+  .add-sale-attr-btn {
+    margin-left: 15px;
+  }
+
+  .cancel-btn {
+    margin-left: 15px;
+  }
+}
