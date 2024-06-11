@@ -6,7 +6,7 @@ import {nanoid} from "@reduxjs/toolkit";
 import './AttrManage.scss';
 import Categories from "@/components/categories/Categories.tsx";
 import {reqAddOrUpdateAttr, reqAttrInfoList, reqDeleteAttr} from "@/api/product/attr";
-import {getRandomIndex} from "@/utils";
+import {getRandomInteger} from "@/utils";
 import {Attr, AttrResponseData, AttrValue} from "@/api/product/attr/types";
 
 enum Scene {
@@ -60,7 +60,7 @@ const AttrManage: FC = () => {
       title: '属性值',
       render: (_: any, record: Attr) => {
         return record.attrValueList.map((item: AttrValue) => (
-          <Tag color={tagType[getRandomIndex(tagType.length)]} key={item.id}>
+          <Tag color={tagType[getRandomInteger(tagType.length)]} key={item.id}>
             {item.valueName}
           </Tag>
         ));

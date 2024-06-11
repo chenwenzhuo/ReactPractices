@@ -8,4 +8,4 @@ export const generateRandomHexColor = () => {
   return result;
 }
 
-export const getRandomIndex = (range: number) => Math.floor(Math.random() * range);
+export const getRandomInteger = (range: number) => Math.floor(Math.random() * range);
