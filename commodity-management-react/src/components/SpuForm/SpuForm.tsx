@@ -91,6 +91,7 @@ const SpuForm: FC<SpuFormProps> = (props) => {
                     key={item.id}
                     color={"processing"}
                     closeIcon
+                    onClose={() => onDeleteSaleAttrValue(record, item)}
                   >
                     {item.saleAttrValueName}
                   </Tag>
@@ -130,11 +131,12 @@ const SpuForm: FC<SpuFormProps> = (props) => {
       title: '操作',
       align: 'center',
       width: 200,
-      render: (_: any, __: SpuSaleAttr) => (
+      render: (_: any, record: SpuSaleAttr) => (
         <Button
           type={"primary"}
           icon={<DeleteOutlined/>}
           danger
+          onClick={() => onDeleteSaleAttr(record)}
         ></Button>
       ),
     },
@@ -232,7 +234,7 @@ const SpuForm: FC<SpuFormProps> = (props) => {
     setSpuSaleAttr([...spuSaleAttr, newSaleAttr]);
     setShowSaleAttrValList([...showSaleAttrValList, true]);
     filterSaleAttrs(); // 重新运行过滤器函数
-    spuForm.setFieldValue('spuSaleAttr', '');
+    spuForm.setFieldValue('spuSaleAttr', null);
   }
 
   // 输入新销售属性完成的回调
@@ -261,6 +263,18 @@ const SpuForm: FC<SpuFormProps> = (props) => {
       true,
       ...showSaleAttrValList.slice(index + 1)
     ]);
+  }
+
+  // 删除销售属性的点击回调
+  function onDeleteSaleAttr(record: SpuSaleAttr) {
+    setSpuSaleAttr(spuSaleAttr.filter(item => item.id !== record.id));
+  }
+
+  // 删除销售属性值的点击回调
+  function onDeleteSaleAttrValue(saleAttrRecord: SpuSaleAttr, valItemToDel: SpuSaleAttrValue) {
+    saleAttrRecord.spuSaleAttrValueList =
+      saleAttrRecord.spuSaleAttrValueList.filter(item => item.id !== valItemToDel.id);
+    setSpuSaleAttr([...spuSaleAttr]);
   }
 
   // 保存按钮的点击回调
@@ -344,7 +358,7 @@ const SpuForm: FC<SpuFormProps> = (props) => {
 
   // 销售属性下拉框选项更新后，更新placeholder
   useEffect(() => {
-    setSaleAttrPlaceholder(`还有${saleAttrOptions.length}项可选择`);
+    setSaleAttrPlaceholder(saleAttrOptions.length ? `还有${saleAttrOptions.length}项可选择` : '暂无选项');
   }, [saleAttrOptions]);
 
   return (
