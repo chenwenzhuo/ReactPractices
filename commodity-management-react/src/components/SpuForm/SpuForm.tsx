@@ -84,37 +84,45 @@ const SpuForm: FC<SpuFormProps> = (props) => {
           {/*销售属性值列表*/}
           {
             showSaleAttrValList[index] &&
-            spuSaleAttrValueList.map((item: SpuSaleAttrValue) => (
-              <Tag
-                key={item.id}
-                color={"processing"}
-                closeIcon
-              >
-                {item.saleAttrValueName}
-              </Tag>
-            ))
+            <>
+              {
+                spuSaleAttrValueList.map((item: SpuSaleAttrValue) => (
+                  <Tag
+                    key={item.id}
+                    color={"processing"}
+                    closeIcon
+                  >
+                    {item.saleAttrValueName}
+                  </Tag>
+                ))
+              }
+              <Button
+                type={"primary"}
+                icon={<PlusOutlined/>}
+                size={'small'}
+                onClick={() => setShowSaleAttrValList([
+                  ...showSaleAttrValList.slice(0, index),
+                  false,
+                  ...showSaleAttrValList.slice(index + 1),
+                ])}
+              ></Button>
+            </>
           }
           {/*新销售属性值输入表单*/}
           {
             !showSaleAttrValList[index] &&
-            <FormItem name={"saleAttrVal"}>
+            <FormItem
+              name={"saleAttrVal"}
+              className={"sale-atr-val-item"}
+            >
               <Input
                 autoFocus
                 placeholder={"请输入新销售属性值"}
                 onBlur={(e: any) => onCompleteNewSaleAttrVal(e, index)}
+                className={"sale-attr-val-input"}
               />
             </FormItem>
           }
-          <Button
-            type={"primary"}
-            icon={<PlusOutlined/>}
-            size={'small'}
-            onClick={() => setShowSaleAttrValList([
-              ...showSaleAttrValList.slice(0, index),
-              false,
-              ...showSaleAttrValList.slice(index + 1),
-            ])}
-          ></Button>
         </>);
       }
     },

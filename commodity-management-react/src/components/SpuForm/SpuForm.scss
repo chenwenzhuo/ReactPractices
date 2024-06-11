@@ -11,6 +11,15 @@
     width: 400px;
   }
 
+  .sale-atr-val-item {
+    display: inline-block;
+    margin: 0;
+
+    .sale-attr-val-input {
+      width: 240px;
+    }
+  }
+
   .add-sale-attr-btn {
     margin-left: 15px;
   }
