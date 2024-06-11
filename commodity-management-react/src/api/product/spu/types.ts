@@ -10,8 +10,8 @@ interface SpuResponse {
 // 单个SPU信息对象的类型
 export interface SpuRecord {
   id?: number;
-  createTime: string;
-  updateTime: string;
+  createTime?: string;
+  updateTime?: string;
   spuName: string;
   description: string;
   category3Id: number;
@@ -50,7 +50,7 @@ export interface SpuImage {
   id?: number;
   createTime?: string | null;
   updateTime?: string | null;
-  spuId: number;
+  spuId?: number;
   imgName: string;
   imgUrl: string;
 }

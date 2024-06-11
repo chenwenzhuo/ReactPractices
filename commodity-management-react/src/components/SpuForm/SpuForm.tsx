@@ -1,6 +1,6 @@
 // SPU管理中，新增SPU、更新SPU的表单子组件
 import {FC, useEffect, useState} from "react";
-import {Button, Form, Image, Input, Select, Table, Tag, Upload} from "antd";
+import {Button, Form, Image, Input, notification, Select, Table, Tag, Upload} from "antd";
 import {DeleteOutlined, PlusOutlined} from "@ant-design/icons";
 import {nanoid} from "@reduxjs/toolkit";
 import {Trademark} from "@/api/product/trademark/types.ts";
@@ -11,12 +11,21 @@ import {
   SpuImageResponse,
   SpuRecord, SpuSaleAttr, SpuSaleAttrResponse, SpuSaleAttrValue
 } from "@/api/product/spu/types.ts";
-import {reqAllSaleAttr, reqAllTrademarkList, reqSpuImagesList, reqSpuSaleAttr} from "@/api/product/spu";
+import {
+  reqAddOrUpdateSpu,
+  reqAllSaleAttr,
+  reqAllTrademarkList,
+  reqSpuImagesList,
+  reqSpuSaleAttr
+} from "@/api/product/spu";
 import './SpuForm.scss';
+import {getRandomInteger} from "@/utils";
 
 interface SpuFormProps {
-  spuInfo?: SpuRecord | null;
+  spuToUpdate: SpuRecord | null;
+  category3Id: number;
   changeScene: Function;
+  reloadSpuList: Function;
 }
 
 const FormItem = Form.Item;
@@ -31,9 +40,9 @@ const getBase64 = (file: any): Promise<string> =>
   });
 
 const SpuForm: FC<SpuFormProps> = (props) => {
-  const {spuInfo, changeScene} = props;
+  const {spuToUpdate, category3Id, changeScene, reloadSpuList} = props;
   const [spuForm] = Form.useForm();
-  const [spuInfos, setSpuInfos] = useState<any>({}); // SPU表单输入信息
+  const [spuFormData, setSpuFormData] = useState<any>({}); // SPU表单输入信息
   const [trademarkList, setTrademarkList] = useState<Trademark[]>([]); // 所有品牌的数据
   const [spuImageList, setSpuImageList] = useState<SpuImage[]>([]); // 当前SPU的图片数据
   const [picWallFileList, setPicWallFileList] = useState<any[]>([]); // 照片墙数据列表
@@ -41,8 +50,10 @@ const SpuForm: FC<SpuFormProps> = (props) => {
   const [previewImage, setPreviewImage] = useState<string>(''); // 预览图片的URL
   const [allSaleAttr, setAllSaleAttr] = useState<SaleAttr[]>([]); // 所有的销售属性
   const [spuSaleAttr, setSpuSaleAttr] = useState<SpuSaleAttr[]>([]); // 当前SPU已有的销售属性
+  const [saleAttrPlaceholder, setSaleAttrPlaceholder] = useState<string>(""); // “SPU销售属性”表单项中下拉框的placeholder
   const [saleAttrOptions, setSaleAttrOptions] = useState<any[]>([]); // “SPU销售属性”表单项中下拉框的选项
   const [saleAttrToAdd, setSaleAttrToAdd] = useState<string>('');// “SPU销售属性”表单项中下拉框的选中值
+  const [showSaleAttrValList, setShowSaleAttrValList] = useState<boolean[]>([]); // 标志位，是否展示销售属性值列表
 
   const uploadButton = (
     <button className={"upload-img-btn"} type="button">
@@ -67,10 +78,12 @@ const SpuForm: FC<SpuFormProps> = (props) => {
     },
     {
       title: '属性值',
-      render: (_: any, record: SpuSaleAttr) => {
+      render: (_: any, record: SpuSaleAttr, index: number) => {
         const {spuSaleAttrValueList} = record;
         return (<>
+          {/*销售属性值列表*/}
           {
+            showSaleAttrValList[index] &&
             spuSaleAttrValueList.map((item: SpuSaleAttrValue) => (
               <Tag
                 key={item.id}
@@ -81,10 +94,26 @@ const SpuForm: FC<SpuFormProps> = (props) => {
               </Tag>
             ))
           }
+          {/*新销售属性值输入表单*/}
+          {
+            !showSaleAttrValList[index] &&
+            <FormItem name={"saleAttrVal"}>
+              <Input
+                autoFocus
+                placeholder={"请输入新销售属性值"}
+                onBlur={(e: any) => onCompleteNewSaleAttrVal(e, index)}
+              />
+            </FormItem>
+          }
           <Button
             type={"primary"}
             icon={<PlusOutlined/>}
             size={'small'}
+            onClick={() => setShowSaleAttrValList([
+              ...showSaleAttrValList.slice(0, index),
+              false,
+              ...showSaleAttrValList.slice(index + 1),
+            ])}
           ></Button>
         </>);
       }
@@ -104,26 +133,23 @@ const SpuForm: FC<SpuFormProps> = (props) => {
   ];
 
   function onSpuInfosChange(infoAttrName: string, infoAttrVal: any) {
-    setSpuInfos({...spuInfos, [infoAttrName]: infoAttrVal});
+    setSpuFormData({...spuFormData, [infoAttrName]: infoAttrVal});
   }
 
   // 查询所有品牌数据
   async function getAllTrademarkList() {
     const response: AllTrademarksResponse = await reqAllTrademarkList();
-    console.log('getAllTrademarkList response---', response);
     setTrademarkList(response.data);
   }
 
   // 查询当前SPU的所有图片
   async function getSpuImageList() {
-    const response: SpuImageResponse = await reqSpuImagesList(spuInfo?.id as number);
-    console.log('getSpuImageList response---', response);
+    const response: SpuImageResponse = await reqSpuImagesList(spuToUpdate?.id as number);
     setSpuImageList(response.data);
   }
 
   // 照片墙列表改变的回调
   function onPicWallListChange({fileList}: any) {
-    console.log('fileList---', fileList);
     // 由于antd Upload组件的bug，组件设置了fileList选项时，必须在onChange回调里直接将fileList实参
     // 直接设置给对应的state，否则onChange只会调用一次，文件一直在uploading，拿不到最终的上传结果
     setPicWallFileList(fileList);
@@ -145,7 +171,6 @@ const SpuForm: FC<SpuFormProps> = (props) => {
 
   // 移除照片墙中图片的回调
   function onRemoveImage(file: any) {
-    console.log('file to remove---', file);
     const imagesAfterRemove = picWallFileList.filter(item => item.uid !== file.uid);
     setPicWallFileList(imagesAfterRemove);
   }
@@ -162,14 +187,12 @@ const SpuForm: FC<SpuFormProps> = (props) => {
   // 查询全部销售属性
   async function getAllSaleAttr() {
     const response: SaleAttrResponse = await reqAllSaleAttr();
-    console.log('getAllSaleAttr response---', response);
     setAllSaleAttr(response.data);
   }
 
   // 查询当前SPU下的销售属性
   async function getSpuSaleAttr() {
-    const response: SpuSaleAttrResponse = await reqSpuSaleAttr(spuInfo?.id as number);
-    console.log('getSpuSaleAttr response---', response);
+    const response: SpuSaleAttrResponse = await reqSpuSaleAttr(spuToUpdate?.id as number);
     setSpuSaleAttr(response.data);
   }
 
@@ -192,14 +215,81 @@ const SpuForm: FC<SpuFormProps> = (props) => {
     // 将下拉框的选中值映射为一个销售属性对象
     const attr = saleAttrToAdd.split('-');
     const newSaleAttr = {
-      spuId: spuInfo?.id as number,
+      id: getRandomInteger(100000),
+      spuId: spuToUpdate?.id as number,
       baseSaleAttrId: Number(attr[0]),
       saleAttrName: attr[1],
       spuSaleAttrValueList: [],
     };
     setSpuSaleAttr([...spuSaleAttr, newSaleAttr]);
+    setShowSaleAttrValList([...showSaleAttrValList, true]);
     filterSaleAttrs(); // 重新运行过滤器函数
     spuForm.setFieldValue('spuSaleAttr', '');
+  }
+
+  // 输入新销售属性完成的回调
+  function onCompleteNewSaleAttrVal(e: any, index: number) {
+    const value = e.target.value.trim();
+    const spuRecord = spuSaleAttr[index];
+    if (value) {
+      // 新的销售属性值对象
+      const saleAttrValObj = {
+        id: getRandomInteger(100000),
+        spuId: spuToUpdate?.id as number,
+        baseSaleAttrId: spuRecord.baseSaleAttrId,
+        saleAttrValueName: value,
+        saleAttrName: spuRecord.saleAttrName,
+      };
+      spuRecord.spuSaleAttrValueList = [...spuRecord.spuSaleAttrValueList, saleAttrValObj];
+      setSpuSaleAttr([
+        ...spuSaleAttr.slice(0, index),
+        spuRecord,
+        ...spuSaleAttr.slice(index + 1)
+      ]);
+      spuForm.setFieldValue("saleAttrVal", "");
+    }
+    setShowSaleAttrValList([
+      ...showSaleAttrValList.slice(0, index),
+      true,
+      ...showSaleAttrValList.slice(index + 1)
+    ]);
+  }
+
+  // 保存按钮的点击回调
+  async function onSaveSpu() {
+    const params: SpuRecord = {
+      id: spuToUpdate?.id,
+      spuName: spuFormData.spuName,
+      description: spuFormData.spuDesc,
+      tmId: spuFormData.spuTrademark,
+      category3Id: category3Id,
+      spuSaleAttrList: spuSaleAttr.map(saleAttr => ({
+        ...saleAttr,
+        spuSaleAttrValueList: saleAttr.spuSaleAttrValueList.map(attrVal => ({
+          baseSaleAttrId: attrVal.baseSaleAttrId,
+          saleAttrValueName: attrVal.saleAttrValueName,
+        }))
+      })),
+      spuImageList: picWallFileList.map(pic => ({
+        spuId: spuToUpdate?.id,
+        imgName: pic.name,
+        imgUrl: pic.url,
+      })),
+    };
+    const response: any = await reqAddOrUpdateSpu(params);
+    if (response.code === 200) {
+      notification.open({
+        type: "success",
+        message: `${spuToUpdate ? "更新" : "添加"}SPU成功！`,
+      });
+      changeScene(0);
+      reloadSpuList();
+    } else {
+      notification.open({
+        type: "error",
+        message: `${spuToUpdate ? "更新" : "添加"}SPU失败！`,
+      });
+    }
   }
 
   useEffect(() => {
@@ -207,14 +297,19 @@ const SpuForm: FC<SpuFormProps> = (props) => {
     getAllSaleAttr(); // 查询所有销售属性
 
     // 传递了spuInfo参数，才进行以下操作
-    if (spuInfo && spuInfo.id) {
+    if (spuToUpdate && spuToUpdate.id) {
       getSpuImageList(); // 查询当前SPU下的全部图片
       getSpuSaleAttr(); // 查询当前SPU下的销售属性
       // 设置表单元素的值
       spuForm.setFieldsValue({
-        spuName: spuInfo.spuName,
-        spuTrademark: spuInfo.tmId,
-        spuDesc: spuInfo.description,
+        spuName: spuToUpdate.spuName,
+        spuTrademark: spuToUpdate.tmId,
+        spuDesc: spuToUpdate.description,
+      });
+      setSpuFormData({
+        spuName: spuToUpdate.spuName,
+        spuTrademark: spuToUpdate.tmId,
+        spuDesc: spuToUpdate.description,
       });
     }
   }, []);
@@ -230,10 +325,19 @@ const SpuForm: FC<SpuFormProps> = (props) => {
     setPicWallFileList(picWallList);
   }, [spuImageList]);
 
-  // 已有销售属性发生变化时，重新运行过滤函数
+  // 全部/已有销售属性发生变化时，运行过滤函数
   useEffect(() => {
     filterSaleAttrs();
+  }, [allSaleAttr]);
+  useEffect(() => {
+    filterSaleAttrs();
+    setShowSaleAttrValList(spuSaleAttr.map(() => true));
   }, [spuSaleAttr]);
+
+  // 销售属性下拉框选项更新后，更新placeholder
+  useEffect(() => {
+    setSaleAttrPlaceholder(`还有${saleAttrOptions.length}项可选择`);
+  }, [saleAttrOptions]);
 
   return (
     <main className={"spu-form-component"}>
@@ -241,6 +345,7 @@ const SpuForm: FC<SpuFormProps> = (props) => {
         form={spuForm}
         name={"spuForm"}
         layout={"vertical"}
+        onFinish={onSaveSpu}
       >
         <FormItem
           label={"SPU名称"}
@@ -260,7 +365,7 @@ const SpuForm: FC<SpuFormProps> = (props) => {
             className={"spu-trademark-select"}
             placeholder={"请选择品牌"}
             options={trademarkList.map((item: Trademark) => ({label: item.tmName, value: item.id}))}
-            // onChange={(e: any) => onSpuInfosChange('spuName', e.target.value)}
+            onChange={(value: any) => onSpuInfosChange('spuTrademark', value)}
           />
         </FormItem>
         <FormItem
@@ -312,7 +417,7 @@ const SpuForm: FC<SpuFormProps> = (props) => {
             >
               <Select
                 className={"spu-sale-attr-select"}
-                placeholder={`还有${saleAttrOptions.length}项可选择`}
+                placeholder={saleAttrPlaceholder}
                 options={saleAttrOptions}
                 onChange={(value: string) => setSaleAttrToAdd(value || "")}
               />
@@ -336,7 +441,7 @@ const SpuForm: FC<SpuFormProps> = (props) => {
           </div>
         </FormItem>
         <FormItem>
-          <Button type={"primary"}>保存</Button>
+          <Button type={"primary"} htmlType={"submit"}>保存</Button>
           <Button className={"cancel-btn"} onClick={() => changeScene(0)}>取消</Button>
         </FormItem>
       </Form>

@@ -17,12 +17,12 @@ enum Scene {
 }
 
 const SpuManage: FC = () => {
-  const [selectionCate1, setSelectionCate1] = useState<number | null>(2); // 一级分类选中项
-  const [selectionCate2, setSelectionCate2] = useState<number | null>(13); // 二级分类选中项
-  const [selectionCate3, setSelectionCate3] = useState<number | null>(61); // 三级分类选中项
+  const [selectionCate1, setSelectionCate1] = useState<number | null>(null); // 一级分类选中项
+  const [selectionCate2, setSelectionCate2] = useState<number | null>(null); // 二级分类选中项
+  const [selectionCate3, setSelectionCate3] = useState<number | null>(null); // 三级分类选中项
   const [scene, setScene] = useState<string>(Scene.DISPLAY_SPU); // 场景标记
   // 表格分页相关数据
-  const [total, setTotal] = useState<number>(1);
+  const [total, setTotal] = useState<number>(0);
   const [pageNo, setPageNo] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(5);
   const [spuInfoList, setSpuInfoList] = useState<SpuRecord[]>([]); // SPU展示表格的数据
@@ -81,7 +81,6 @@ const SpuManage: FC = () => {
   // 查询SPU列表
   async function getSpuInfoList() {
     const response: SpuResponseData = await reqSpuInfoList(pageNo, pageSize, selectionCate3 as number);
-    console.log('getSpuInfoList response---', response);
     if (response.code === 200) {
       const {data} = response;
       setTotal(data.total);
@@ -163,7 +162,12 @@ const SpuManage: FC = () => {
         {
           (scene === Scene.ADD_SPU || scene === Scene.UPDATE_SPU) &&
           <div className={"add-update-spu-wrapper"}>
-            <SpuForm spuInfo={selectedSpu} changeScene={changeScene}/>
+            <SpuForm
+              spuToUpdate={selectedSpu}
+              category3Id={selectionCate3 as number}
+              changeScene={changeScene}
+              reloadSpuList={getSpuInfoList}
+            />
           </div>
         }
         {/*新增SKU*/}
