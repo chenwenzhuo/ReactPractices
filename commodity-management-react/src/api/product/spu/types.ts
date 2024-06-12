@@ -120,3 +120,27 @@ export interface SkuData {
   },
   skuDefaultImg: string,
 }
+
+// 查询SKU列表，单个SKU数据的类型
+export interface SkuRecord {
+  id: number;
+  createTime: string;
+  updateTime: string;
+  spuId: number;
+  price: number;
+  skuName: string;
+  skuDesc: string;
+  weight: string;
+  tmId: number;
+  category3Id: number;
+  skuDefaultImg: string;
+  isSale: number;
+  skuImageList?: any;
+  skuAttrValueList?: any;
+  skuSaleAttrValueList?: any;
+}
+
+// 查询SKU列表，接口的返回数据类型
+export interface SkuListResponseData extends SpuResponse {
+  data: SkuRecord[];
+}

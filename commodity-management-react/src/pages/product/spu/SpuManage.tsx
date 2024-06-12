@@ -1,11 +1,11 @@
 import {FC, useEffect, useState} from "react";
-import {Button, Card, Pagination, Table, Tooltip} from "antd";
+import {Button, Card, Empty, Modal, Pagination, Table, Tooltip} from "antd";
 import {DeleteOutlined, FormOutlined, InfoCircleOutlined, PlusOutlined} from "@ant-design/icons";
 
 import './SpuManage.scss';
 import Categories from "@/components/categories/Categories.tsx";
-import {reqSpuInfoList} from "@/api/product/spu";
-import {SpuRecord, SpuResponseData} from "@/api/product/spu/types.ts";
+import {reqSkuInfoList, reqSpuInfoList} from "@/api/product/spu";
+import {SkuListResponseData, SkuRecord, SpuRecord, SpuResponseData} from "@/api/product/spu/types.ts";
 import SpuForm from "@/components/SpuForm/SpuForm.tsx";
 import SkuForm from "@/components/SkuForm/SkuForm.tsx";
 
@@ -26,8 +26,9 @@ const SpuManage: FC = () => {
   const [pageNo, setPageNo] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(5);
   const [spuInfoList, setSpuInfoList] = useState<SpuRecord[]>([]); // SPU展示表格的数据
-
+  const [skuInfoList, setSkuInfoList] = useState<SkuRecord[]>([]); // SKU展示表格的数据
   const [selectedSpu, setSelectedSpu] = useState<SpuRecord | null>(null); // 进行SPU操作时，被选中的SPU对象
+  const [showSkuModal, setShowSkuModal] = useState<boolean>(false); // 是否展示SKU列表对话框
 
   const categoriesValidFlag = selectionCate1 !== null && selectionCate2 !== null && selectionCate3 !== null;
   const addSpuBtn = (
@@ -38,7 +39,7 @@ const SpuManage: FC = () => {
     </Button>
   );
 
-  const displaySpuTableColumns: any[] = [
+  const spuTableColumns: any[] = [
     {
       title: '序号',
       dataIndex: 'index',
@@ -70,13 +71,46 @@ const SpuManage: FC = () => {
             <Button type={"primary"} icon={<FormOutlined/>} onClick={() => onUpdateSpuClick(record)}></Button>
           </Tooltip>
           <Tooltip title={"查看SKU列表"}>
-            <Button type={"primary"} icon={<InfoCircleOutlined/>}></Button>
+            <Button type={"primary"} icon={<InfoCircleOutlined/>}
+                    onClick={() => onDisplaySkuListClick(record)}>
+            </Button>
           </Tooltip>
           <Tooltip title={"删除SPU"}>
             <Button type={"primary"} icon={<DeleteOutlined/>}></Button>
           </Tooltip>
         </div>);
       }
+    },
+  ];
+
+  const skuTableColumns: any[] = [
+    {
+      title: '序号',
+      width: 100,
+      align: 'center',
+      className: 'index-col',
+      render: (_: any, __: SpuRecord, index: number) => index + 1,
+    },
+    {
+      title: 'SKU名称',
+      dataIndex: 'skuName',
+      width: 200,
+    },
+    {
+      title: 'SKU价格(元)',
+      dataIndex: 'price',
+      width: 120,
+    },
+    {
+      title: 'SKU重量(克)',
+      dataIndex: 'weight',
+      width: 120,
+    },
+    {
+      title: 'SKU图片',
+      render: (_: any, record: SkuRecord) => (<>
+        <img src={record.skuDefaultImg} alt={""} style={{width: "80px"}}/>
+      </>),
     },
   ];
 
@@ -130,6 +164,27 @@ const SpuManage: FC = () => {
     changeScene(2);
   }
 
+  // 查询SKU列表
+  async function getSkuInfoList(spuRecord: SpuRecord) {
+    const response: SkuListResponseData = await reqSkuInfoList(spuRecord.id as number);
+    console.log('SKU list---', response);
+    if (response.code === 200) {
+      setSkuInfoList(response.data);
+    }
+  }
+
+  // 查看SKU列表按钮的点击回调
+  function onDisplaySkuListClick(spuRecord: SpuRecord) {
+    getSkuInfoList(spuRecord);
+    setShowSkuModal(true);
+  }
+
+  // SKU列表对话框关闭的回调
+  function onCloseSkuModal() {
+    setShowSkuModal(false);
+    setSkuInfoList([]);
+  }
+
   // 监视三个分类id、分页大小和页码，分类为有效值时查询SPU信息
   useEffect(() => {
     if (!categoriesValidFlag) {
@@ -153,7 +208,7 @@ const SpuManage: FC = () => {
           scene === Scene.DISPLAY_SPU &&
           <div className="display-spu-wrapper">
             <Table
-              columns={displaySpuTableColumns}
+              columns={spuTableColumns}
               dataSource={spuInfoList}
               rowKey={"id"}
               bordered
@@ -197,6 +252,27 @@ const SpuManage: FC = () => {
           </div>
         }
       </Card>
+      {/*展示SKU列表*/}
+      <Modal
+        open={showSkuModal}
+        title={"SKU列表"}
+        footer={null}
+        width={800}
+        centered
+        onCancel={onCloseSkuModal}
+      >
+        {
+          skuInfoList.length === 0 ?
+            <Empty/> :
+            <Table
+              columns={skuTableColumns}
+              dataSource={skuInfoList}
+              rowKey={"id"}
+              bordered
+              pagination={false}
+            />
+        }
+      </Modal>
     </main>
   );
 };
