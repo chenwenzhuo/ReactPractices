@@ -103,7 +103,6 @@ const SkuManage: FC = () => {
   // 获取所欲SKU数据列表
   async function getAllSkuInfoList() {
     const response: SkuListResponseData = await reqAllSkuInfoList(pageNo, pageSize);
-    console.log('SKU info list---', response);
     if (response.code === 200) {
       const {data} = response;
       setSkuInfoList(data.records);
@@ -142,7 +141,6 @@ const SkuManage: FC = () => {
   // 获取SKU详细信息
   async function getSkuDetailInfo(skuId: number) {
     const response: SkuDetailInfoResponse = await reqSkuDetailInfo(skuId);
-    console.log('getSkuDetailInfo response---', response);
     if (response.code === 200) {
       setSelectedSkuDetail(response.data);
     }
