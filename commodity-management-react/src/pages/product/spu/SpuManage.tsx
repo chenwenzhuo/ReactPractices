@@ -1,5 +1,5 @@
 import {FC, useEffect, useState} from "react";
-import {Button, Card, Pagination, Table} from "antd";
+import {Button, Card, Pagination, Table, Tooltip} from "antd";
 import {DeleteOutlined, FormOutlined, InfoCircleOutlined, PlusOutlined} from "@ant-design/icons";
 
 import './SpuManage.scss';
@@ -27,7 +27,7 @@ const SpuManage: FC = () => {
   const [pageSize, setPageSize] = useState<number>(5);
   const [spuInfoList, setSpuInfoList] = useState<SpuRecord[]>([]); // SPU展示表格的数据
 
-  const [selectedSpu, setSelectedSpu] = useState<SpuRecord | null>(null); // 更新SPU时，被选中的SPU对象
+  const [selectedSpu, setSelectedSpu] = useState<SpuRecord | null>(null); // 进行SPU操作时，被选中的SPU对象
 
   const categoriesValidFlag = selectionCate1 !== null && selectionCate2 !== null && selectionCate3 !== null;
   const addSpuBtn = (
@@ -63,10 +63,18 @@ const SpuManage: FC = () => {
       align: 'center',
       render: (_: any, record: SpuRecord, ___: any) => {
         return (<div className={"opt-buttons"}>
-          <Button type={"primary"} icon={<PlusOutlined/>} onClick={() => changeScene(3)}></Button>
-          <Button type={"primary"} icon={<FormOutlined/>} onClick={() => onUpdateSpuClick(record)}></Button>
-          <Button type={"primary"} icon={<InfoCircleOutlined/>}></Button>
-          <Button type={"primary"} icon={<DeleteOutlined/>}></Button>
+          <Tooltip title={"添加SKU"}>
+            <Button type={"primary"} icon={<PlusOutlined/>} onClick={() => onAddSkuClick(record)}></Button>
+          </Tooltip>
+          <Tooltip title={"更新SPU"}>
+            <Button type={"primary"} icon={<FormOutlined/>} onClick={() => onUpdateSpuClick(record)}></Button>
+          </Tooltip>
+          <Tooltip title={"查看SKU列表"}>
+            <Button type={"primary"} icon={<InfoCircleOutlined/>}></Button>
+          </Tooltip>
+          <Tooltip title={"删除SPU"}>
+            <Button type={"primary"} icon={<DeleteOutlined/>}></Button>
+          </Tooltip>
         </div>);
       }
     },
@@ -108,6 +116,12 @@ const SpuManage: FC = () => {
       setSelectedSpu(null); // 从其他场景切换回展示列表，将选中的SPU重置为null
     }
     setScene(sceneArr[nextSceneIndex]);
+  }
+
+  // 添加SKU按钮的点击事件
+  function onAddSkuClick(record: SpuRecord) {
+    setSelectedSpu(record);
+    changeScene(3);
   }
 
   // 更新SPU时按钮点击事件
@@ -174,7 +188,12 @@ const SpuManage: FC = () => {
         {
           scene === Scene.ADD_SKU &&
           <div className={"add-sku-wrapper"}>
-            <SkuForm/>
+            <SkuForm
+              categoryIds={[selectionCate1 as number, selectionCate2 as number, selectionCate3 as number]}
+              targetSpu={selectedSpu as SpuRecord}
+              changeScene={changeScene}
+              reloadSpuList={getSpuInfoList}
+            />
           </div>
         }
       </Card>

@@ -100,3 +100,23 @@ export interface SaleAttr {
 export interface SaleAttrResponse extends SpuResponse {
   data: SaleAttr[];
 }
+
+// 添加SKU，请求数据类型
+export interface SkuData {
+  category3Id: string | number,
+  spuId: string | number,
+  tmId: string | number,
+  skuName: string,
+  price: string | number,
+  weight: string | number,
+  skuDesc: string,
+  skuAttrValueList: {
+    attrId: string | number,
+    attrValueId: string | number,
+  },
+  skuSaleAttrValueList: {
+    saleAttrId: string | number,
+    saleAttrValueId: string | number,
+  },
+  skuDefaultImg: string,
+}

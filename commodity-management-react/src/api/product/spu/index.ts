@@ -2,7 +2,7 @@
 import request from "@/utils/request.ts";
 import {
   AllTrademarksResponse,
-  SaleAttrResponse,
+  SaleAttrResponse, SkuData,
   SpuImageResponse, SpuRecord,
   SpuResponseData,
   SpuSaleAttrResponse
@@ -16,6 +16,7 @@ enum API {
   GET_ALL_SALE_ATTR = "/admin/product/baseSaleAttrList", // 查询全部销售属性
   CREATE_SPU = '/admin/product/saveSpuInfo', // 创建SPU
   UPDATE_SPU = '/admin/product/updateSpuInfo', // 更新已有的SPU
+  CREATE_SKU = '/admin/product/saveSkuInfo', // 创建SKU
 }
 
 // 查询SPU列表
@@ -42,3 +43,6 @@ export const reqAddOrUpdateSpu = (data: SpuRecord) => {
     return request.post<any, any>(API.CREATE_SPU, data);
   }
 }
+
+// 添加SKU
+export const reqAddSku = (data: SkuData) => request.post<any, any>(API.CREATE_SKU, data);

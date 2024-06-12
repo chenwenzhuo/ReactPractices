@@ -1,0 +1,22 @@
+.sku-form-component {
+  .ant-form-item-label {
+    width: 100px;
+  }
+
+  .inline-form-item {
+    display: inline-block;
+    //margin-left: 20px;
+
+    .inline-select {
+      width: 240px;
+    }
+  }
+
+  .logo-img {
+    width: 80px;
+  }
+
+  .cancel-btn {
+    margin-left: 20px;
+  }
+}
