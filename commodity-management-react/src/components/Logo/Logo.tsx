@@ -13,7 +13,7 @@ const Logo: FC = () => {
       <img src={logoImg} alt={""}
            className={`${siderCollapsed ? 'logo-img-smaller' : 'logo-img-bigger'}`}
       />
-      {!siderCollapsed && <span className={"mall-title"}>商品管理经营平台</span>}
+      {!siderCollapsed && <div className={"mall-title"}>商品管理经营平台</div>}
     </main>
   );
 };

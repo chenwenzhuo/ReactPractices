@@ -41,7 +41,7 @@ const AppLayout: FC = () => {
   return (
     <Layout className={"home-component"}>
       <Sider
-        width={"360px"}
+        width={"240px"}
         className={"home-sider"}
         collapsed={siderCollapsed}
       >
