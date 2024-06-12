@@ -1,0 +1,61 @@
+.sku-component {
+  .opt-btns-wrapper {
+    .opt-btn {
+      width: 50px;
+
+      &:not(:first-child) {
+        margin-left: 10px;
+      }
+    }
+
+    // 商品为上架状态时，按钮的样式
+    .on-sale-btn {
+      background-color: #77ea81;
+    }
+
+    // 商品为下架状态时，按钮的样式
+    .off-sale-btn {
+      background-color: #aeaeae;
+    }
+
+    .opt-btn:nth-child(2) {
+      background-color: #e3c051;
+    }
+  }
+
+  .pagination-wrapper {
+    margin-top: 15px;
+    float: right;
+  }
+}
+
+// 自定义<Carousel/>组件的箭头
+.ant-carousel .slick-prev,
+.ant-carousel .slick-next,
+.ant-carousel .slick-prev:hover,
+.ant-carousel .slick-next:hover,
+.ant-carousel .slick-prev:focus,
+.ant-carousel .slick-next:focus {
+  font-size: inherit;
+  color: #000000 !important;
+}
+
+.ant-carousel .slick-prev::before {
+  color: #000000 !important;
+  left: -25px !important;
+}
+
+.slick-arrow.slick-prev {
+  font-size: 20px !important;
+  left: -25px !important;
+}
+
+.ant-carousel .slick-next::before {
+  color: #000000 !important;
+  right: -25px !important;
+}
+
+.slick-arrow.slick-next {
+  font-size: 20px !important;
+  right: -25px !important;
+}
