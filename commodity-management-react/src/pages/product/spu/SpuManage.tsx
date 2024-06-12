@@ -1,10 +1,10 @@
 import {FC, useEffect, useState} from "react";
-import {Button, Card, Empty, Modal, Pagination, Table, Tooltip} from "antd";
+import {Button, Card, Empty, Modal, notification, Pagination, Popconfirm, Table, Tooltip} from "antd";
 import {DeleteOutlined, FormOutlined, InfoCircleOutlined, PlusOutlined} from "@ant-design/icons";
 
 import './SpuManage.scss';
 import Categories from "@/components/categories/Categories.tsx";
-import {reqSkuInfoList, reqSpuInfoList} from "@/api/product/spu";
+import {reqDeleteSpu, reqSkuInfoList, reqSpuInfoList} from "@/api/product/spu";
 import {SkuListResponseData, SkuRecord, SpuRecord, SpuResponseData} from "@/api/product/spu/types.ts";
 import SpuForm from "@/components/SpuForm/SpuForm.tsx";
 import SkuForm from "@/components/SkuForm/SkuForm.tsx";
@@ -76,7 +76,16 @@ const SpuManage: FC = () => {
             </Button>
           </Tooltip>
           <Tooltip title={"删除SPU"}>
-            <Button type={"primary"} icon={<DeleteOutlined/>}></Button>
+            <Popconfirm
+              title="删除SPU"
+              description="是否确认删除当前SPU？"
+              okText="确认"
+              cancelText="取消"
+              okButtonProps={{danger: true}}
+              onConfirm={() => deleteSpu(record)}
+            >
+              <Button type={"primary"} icon={<DeleteOutlined/>}></Button>
+            </Popconfirm>
           </Tooltip>
         </div>);
       }
@@ -167,7 +176,6 @@ const SpuManage: FC = () => {
   // 查询SKU列表
   async function getSkuInfoList(spuRecord: SpuRecord) {
     const response: SkuListResponseData = await reqSkuInfoList(spuRecord.id as number);
-    console.log('SKU list---', response);
     if (response.code === 200) {
       setSkuInfoList(response.data);
     }
@@ -183,6 +191,23 @@ const SpuManage: FC = () => {
   function onCloseSkuModal() {
     setShowSkuModal(false);
     setSkuInfoList([]);
+  }
+
+  // 删除SPU按钮的点击回调
+  async function deleteSpu(spuRecord: SpuRecord) {
+    const response: any = await reqDeleteSpu(spuRecord.id as number);
+    if (response.code === 200) {
+      notification.open({
+        type: "success",
+        message: "删除SPU成功！",
+      });
+      getSpuInfoList();
+    } else {
+      notification.open({
+        type: "error",
+        message: "删除SPU失败！",
+      });
+    }
   }
 
   // 监视三个分类id、分页大小和页码，分类为有效值时查询SPU信息
