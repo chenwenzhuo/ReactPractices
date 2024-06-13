@@ -1,0 +1,37 @@
+.user-component {
+  .search-form {
+    display: flex;
+    justify-content: space-between;
+
+    .cancel-btn {
+      margin-left: 15px;
+    }
+  }
+
+  .delete-batch-btn {
+    margin-left: 15px;
+  }
+
+  .opt-btns-wrapper {
+    .opt-btn:not(:first-child) {
+      margin-left: 10px;
+    }
+  }
+
+  .pagination-wrapper {
+    float: right;
+    margin-top: 15px;
+  }
+
+}
+
+.edit-user-btns-wrapper,
+.assign-role-btns-wrapper {
+  display: flex;
+  justify-content: flex-end;
+
+  .cancel-edit-user-btn,
+  .cancel-assign-role-btn {
+    margin-left: 15px;
+  }
+}
