@@ -1,0 +1,25 @@
+.role-component {
+  .search-form {
+    display: flex;
+    justify-content: space-between;
+
+    .reset-btn {
+      margin-left: 15px;
+    }
+  }
+
+  .opt-btns-wrapper {
+    .opt-btn:not(:first-child) {
+      margin-left: 10px;
+    }
+  }
+
+  .pagination-wrapper {
+    float: right;
+    margin-top: 15px;
+  }
+}
+
+.cancel-permission-assign {
+  margin-left: 15px;
+}
