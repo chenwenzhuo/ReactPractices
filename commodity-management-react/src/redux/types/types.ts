@@ -10,4 +10,6 @@ export interface UserStateType {
 export interface SettingStateType {
   siderCollapsed: boolean;
   refresh: boolean;
+  themeColor: string;
+  darkMode: boolean;
 }

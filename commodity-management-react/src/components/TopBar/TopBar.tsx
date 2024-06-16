@@ -1,7 +1,9 @@
 import {FC, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
-import {Breadcrumb, Button, Dropdown} from "antd";
+import {Breadcrumb, Button, ColorPicker, Dropdown, Form, Popover, Switch} from "antd";
 import {
+  CheckOutlined,
+  CloseOutlined,
   CompressOutlined,
   DownOutlined,
   ExpandOutlined,
@@ -15,16 +17,26 @@ import './TopBar.scss';
 import {RoutesMapType} from "@/api/types.ts";
 import {useAppDispatch, useAppSelector} from "@/redux/hooks.ts";
 import {doLogout, selectAllUserState} from "@/redux/userSlice.ts";
-import {selectAllSettingState, toggleSiderCollapsed, toggleRefresh} from "@/redux/settingSlice.ts";
+import {
+  selectAllSettingState,
+  toggleSiderCollapsed,
+  toggleRefresh,
+  setThemeColor,
+  setDarkMode
+} from "@/redux/settingSlice.ts";
 import {menuIconMap} from "@/components/SiderMenu/SiderMenu.tsx";
+
+const FormItem = Form.Item;
 
 const TopBar: FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [themeForm] = Form.useForm();
   const {username, avatar, menuRoutes} = useAppSelector(selectAllUserState);
   const {siderCollapsed} = useAppSelector(selectAllSettingState);
   const [fullscreen, setFullscreen] = useState<boolean>(false);
+  const [showThemeSettingPanel, setShowThemeSettingPanel] = useState<boolean>(false);
 
   // 根据路径，得到各级菜单的路由名称
   const menuPaths = location.pathname.split('admin')[1]
@@ -80,6 +92,44 @@ const TopBar: FC = () => {
     )
   }];
 
+  const onThemeColorChange = (_: any, hexColor: any) => {
+    dispatch(setThemeColor(hexColor));
+  };
+
+  const onDarkModeChange = (status: boolean) => {
+    dispatch(setDarkMode(status));
+  }
+
+  // 主题设置面板内容
+  const themePanelContent = (
+    <Form
+      form={themeForm}
+      name={"themeForm"}
+      initialValues={{themeColor: "#1677ff", darkMode: false}}
+    >
+      <FormItem
+        label={"主题颜色"}
+        name={"themeColor"}
+      >
+        <ColorPicker
+          showText
+          disabledAlpha
+          onChange={onThemeColorChange}
+        />
+      </FormItem>
+      <FormItem
+        label={"暗黑模式"}
+        name={"darkMode"}
+      >
+        <Switch
+          checkedChildren={<CheckOutlined/>}
+          unCheckedChildren={<CloseOutlined/>}
+          onChange={onDarkModeChange}
+        />
+      </FormItem>
+    </Form>
+  );
+
   return (
     <main className={"top-bar-component"}>
       <section className="top-bar-left">
@@ -98,7 +148,15 @@ const TopBar: FC = () => {
         <Button className={"opt-btn"} shape="circle"
                 icon={fullscreen ? <CompressOutlined/> : <ExpandOutlined/>}
                 onClick={onFullScreenClick}/>
-        <Button className={"opt-btn"} shape="circle" icon={<SettingOutlined/>}/>
+        <Popover
+          title={"主题设置"}
+          content={themePanelContent}
+          trigger={"click"}
+          open={showThemeSettingPanel}
+          onOpenChange={(nextStatus: boolean) => setShowThemeSettingPanel(nextStatus)}
+        >
+          <Button className={"opt-btn"} shape="circle" icon={<SettingOutlined/>}/>
+        </Popover>
         <img src={avatar} alt=""/>
         <Dropdown
           menu={{items: dropDownItems}}

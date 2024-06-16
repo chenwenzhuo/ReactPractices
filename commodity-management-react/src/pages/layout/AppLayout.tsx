@@ -16,7 +16,7 @@ const AppLayout: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
-  const {siderCollapsed, refresh} = useAppSelector(selectAllSettingState);
+  const {siderCollapsed, refresh, darkMode} = useAppSelector(selectAllSettingState);
   const [mainContentFlag, setMainContentFlag] = useState<boolean>(true);
 
   useEffect(() => {
@@ -53,7 +53,10 @@ const AppLayout: FC = () => {
         </div>
       </Sider>
       <Layout>
-        <Header className={"home-header"}>
+        <Header
+          className={"home-header"}
+          style={{backgroundColor: darkMode ? "#141414" : "#ffffff"}}
+        >
           <TopBar/>
         </Header>
         <Content className={"home-content"}>
